@@ -5,7 +5,7 @@ import { ChevronDown, Search, X } from "lucide-react";
 import { skillGroups } from "@/content/site";
 import { skillEvidence } from "@/content/skill-evidence";
 import { projects } from "@/content/projects";
-import { useCaseStudy } from "@/components/case-study/case-study-overlay";
+import { useCaseStudy } from "@/components/case-study/case-study-context";
 import type { ProjectSlug } from "@/content/types";
 import { cn } from "@/lib/utils";
 
@@ -186,6 +186,7 @@ export function SkillFilter() {
                   <button
                     key={p.slug}
                     onClick={() => openCase(p.slug)}
+                    data-case-open
                     title={`Open the ${p.name} case study`}
                     aria-label={`Open the ${p.name} case study`}
                     className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-secondary/40 px-2 py-0.5 text-[11.5px] text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
@@ -208,6 +209,7 @@ export function SkillFilter() {
                     <li key={item}>
                       <button
                         onClick={() => openCase(ev.slug)}
+                        data-case-open
                         title={`${ev.evidence} — open the ${ev.name} case study`}
                         aria-label={`${item}: used in the ${ev.name} case study. ${ev.evidence}`}
                         className={cn(

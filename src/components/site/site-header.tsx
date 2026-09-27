@@ -19,7 +19,7 @@ import {
   CASE_JUMP_EVENT,
   printCaseStudy,
   useCaseStudy,
-} from "@/components/case-study/case-study-overlay";
+} from "@/components/case-study/case-study-context";
 import { getCaseSections } from "@/lib/case-sections";
 import { printResume } from "@/components/site/resume-print";
 import { ScrollProgress } from "@/components/site/scroll-progress";
@@ -92,6 +92,7 @@ export function CommandPalette() {
               {nextCase && (
                 <CommandItem
                   value="next case study"
+                  data-case-open
                   onSelect={() => run(() => openCase(nextCase.slug))}
                 >
                   <span
@@ -105,6 +106,7 @@ export function CommandPalette() {
               {prevCase && (
                 <CommandItem
                   value="previous case study"
+                  data-case-open
                   onSelect={() => run(() => openCase(prevCase.slug))}
                 >
                   <span
@@ -156,6 +158,7 @@ export function CommandPalette() {
               <CommandItem
                 key={p.slug}
                 value={`${p.name} ${p.categories.join(" ")}`}
+                data-case-open
                 onSelect={() => run(() => openCase(p.slug))}
               >
                 <span

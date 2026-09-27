@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ExternalLink, Github, Globe } from "lucide-react";
+import { ArrowRight, Check, ExternalLink, Github, Globe } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Section } from "./section";
 import { Reveal } from "@/components/motion/reveal";
-import { estimateReadMinutes } from "@/components/case-study/case-study-overlay";
+import { estimateReadMinutes } from "@/lib/reading";
+import { useCaseStudy } from "@/components/case-study/case-study-context";
 import { MediaSlot } from "@/components/case-study/media-slot";
 import { PROJECT_TYPE_LABELS } from "@/content/types";
 import { projects } from "@/content/projects";
@@ -146,6 +147,10 @@ function ProjectCard({ project }: { project: Project }) {
   const reduce = useReducedMotion();
   const Visual = VISUALS[project.slug];
   const router = useRouter();
+  // Session-local orientation: has this case study been read (overlay open
+  // or canonical route visit) during this browser session?
+  const { viewed } = useCaseStudy();
+  const isViewed = viewed.includes(project.slug);
 
   // Cursor spotlight: write position directly to CSS vars (no re-render).
   const onSpotlightMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -295,6 +300,16 @@ function ProjectCard({ project }: { project: Project }) {
             <span className="font-mono text-[10px] font-normal text-muted-foreground" aria-hidden>
               ~{estimateReadMinutes(project)} min
             </span>
+            {isViewed && (
+              <span className="inline-flex items-center gap-0.5 text-[10.5px] font-medium text-muted-foreground" title="Opened earlier this session">
+                <Check
+                  className="size-3"
+                  style={{ color: project.accent }}
+                  aria-label="Already viewed this session"
+                />
+                Viewed
+              </span>
+            )}
             <ArrowRight
               className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5"
               aria-hidden

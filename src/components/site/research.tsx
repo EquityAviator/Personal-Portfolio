@@ -3,7 +3,7 @@
 import { ArrowRight, FlaskConical } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Section } from "./section";
-import { useCaseStudy } from "@/components/case-study/case-study-overlay";
+import { useCaseStudy } from "@/components/case-study/case-study-context";
 import { researchIntro } from "@/content/site";
 import type { StoryStep } from "@/content/types";
 
@@ -95,6 +95,7 @@ export function Research() {
           </div>
           <button
             onClick={() => open("captionai")}
+            data-case-open
             className="group block w-full px-5 py-5 text-left transition-colors hover:bg-secondary/30 sm:px-6"
             aria-label="Open the CaptionAI case study"
           >

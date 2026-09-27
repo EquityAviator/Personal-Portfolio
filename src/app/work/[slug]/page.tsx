@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/site-url";
 import { estimateReadMinutes } from "@/lib/reading";
 import {
   CaseStudyProvider,
-} from "@/components/case-study/case-study-overlay";
+} from "@/components/case-study/case-study-context";
 import { getCaseSections } from "@/lib/case-sections";
 import { CaseSectionBar } from "@/components/case-study/case-section-bar";
 import { ScrollProgress } from "@/components/site/scroll-progress";
@@ -112,7 +112,7 @@ export default async function WorkPage({
   };
 
   return (
-    <CaseStudyProvider>
+    <CaseStudyProvider markViewed={project.slug}>
       <div className="flex min-h-dvh flex-col" style={{ ["--pa" as string]: project.accent }}>
         <SiteHeader />
         <main id="main" className="flex-1">

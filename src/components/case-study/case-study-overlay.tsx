@@ -16,173 +16,9 @@ import { CASE_SECTIONS } from "@/lib/case-sections";
 import { StoryRail } from "./primitives";
 import { CaseStudyBody, LinkRow, MetaChips } from "./case-study-body";
 import { useToast } from "@/hooks/use-toast";
+import { CASE_JUMP_EVENT, printCaseStudy, type CaseJumpDetail } from "./case-study-context";
 import { cn } from "@/lib/utils";
-
-export { getCaseSections } from "@/lib/case-sections";
-
-/** Event bridge: the command palette dispatches this to scroll the open case
- *  study to a numbered section (the scroll container lives in the overlay). */
-export const CASE_JUMP_EVENT = "case-study:jump";
-export type CaseJumpDetail = { num: string };
-
-/** sessionStorage key for the "already viewed" case-study list. */
-const VIEWED_KEY = "case-study:viewed";
-
-/** Print the open case study as a clean standalone document.
- *  Expands any collapsed accordion sections first so the printed copy is
- *  complete, then lets the body.case-print layout in globals.css take over. */
-export function printCaseStudy() {
-  const collapsed = document.querySelectorAll<HTMLElement>(
-    '[data-slot="dialog-content"] [data-slot="accordion-item"][data-state="closed"] [data-slot="accordion-trigger"]'
-  );
-  collapsed.forEach((t) => t.click());
-  window.setTimeout(() => window.print(), collapsed.length ? 380 : 0);
-}
-
-/** Rough reading time — implementation lives in the shared pure module
- *  `@/lib/reading` (server components need it too). Imported (not purely
- *  re-exported) because this module ALSO calls it locally in the overlay
- *  header — `export { X } from "..."` does not create a local binding, and
- *  the local call site would throw a ReferenceError at render time. */
 import { estimateReadMinutes } from "@/lib/reading";
-export { estimateReadMinutes };
-
-/* ------------------------------------------------------------------ */
-/* Context                                                              */
-/* ------------------------------------------------------------------ */
-
-const CaseStudyCtx = React.createContext<{
-  open: (slug: ProjectSlug) => void;
-  close: () => void;
-  active: ProjectSlug | null;
-  /** Slugs already opened this browser session (sessionStorage-backed). */
-  viewed: ProjectSlug[];
-}>({ open: () => {}, close: () => {}, active: null, viewed: [] });
-
-export const useCaseStudy = () => React.useContext(CaseStudyCtx);
-
-export function CaseStudyProvider({ children }: { children: React.ReactNode }) {
-  const [active, setActive] = React.useState<ProjectSlug | null>(null);
-  // Screen-reader announcements on open/switch/close (visually hidden live region).
-  // announceRef dedupes so re-renders and back/forward don't re-announce.
-  const [announcement, setAnnouncement] = React.useState("");
-  const announceRef = React.useRef<ProjectSlug | null>(null);
-  // Session-persistent "already viewed" list (recruiter orientation affordance).
-  const [viewed, setViewed] = React.useState<ProjectSlug[]>([]);
-
-  const announce = React.useCallback((slug: ProjectSlug | null) => {
-    if (slug === announceRef.current) return;
-    announceRef.current = slug;
-    setAnnouncement(
-      slug ? `${getProject(slug)?.name ?? "Case study"} case study opened` : "Case study closed"
-    );
-  }, []);
-
-  // Deep-linking: #case-<slug> opens the case study (and survives back/forward).
-  React.useEffect(() => {
-    const onHash = () => {
-      const m = window.location.hash.match(/^#case-([a-z-]+)$/);
-      if (m && getProject(m[1])) {
-        announce(m[1] as ProjectSlug);
-        setActive(m[1] as ProjectSlug);
-      } else {
-        announce(null);
-        setActive(null);
-      }
-    };
-    // Shared links of the form /?case=<slug> are normalized to the hash form
-    // so every entry point (palette, links, history) behaves the same.
-    const q = new URLSearchParams(window.location.search).get("case");
-    if (q && getProject(q) && !/^#case-[a-z-]+$/.test(window.location.hash)) {
-      window.history.replaceState(null, "", `#case-${q}`);
-    }
-    onHash();
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, [announce]);
-
-  // "Viewed" tracking: hydrated from sessionStorage on mount, then kept in
-  // sync as case studies are opened. Purely informational — nothing auto-opens.
-  React.useEffect(() => {
-    try {
-      const raw = window.sessionStorage.getItem(VIEWED_KEY);
-      if (raw) {
-        const slugs = (JSON.parse(raw) as string[]).filter((s) => getProject(s));
-        setViewed(slugs as ProjectSlug[]);
-      }
-    } catch {
-      /* storage unavailable — affordance silently absent */
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (!active) return;
-    try {
-      const prev = (JSON.parse(window.sessionStorage.getItem(VIEWED_KEY) ?? "[]") as string[]).filter(
-        (s) => getProject(s)
-      );
-      if (!prev.includes(active)) {
-        window.sessionStorage.setItem(VIEWED_KEY, JSON.stringify([...prev, active]));
-      }
-    } catch {
-      /* storage unavailable */
-    }
-    setViewed((v) => (v.includes(active) ? v : [...v, active]));
-  }, [active]);
-
-  const open = React.useCallback(
-    (slug: ProjectSlug) => {
-      window.history.replaceState(null, "", `#case-${slug}`);
-      announce(slug);
-      setActive(slug);
-    },
-    [announce]
-  );
-
-  // Arrow-key navigation between case studies while the overlay is open.
-  // Left/Right are unused for vertical scrolling, so this is safe; guards skip
-  // text inputs, editables and composite widgets (accordions, radiogroups).
-  React.useEffect(() => {
-    if (!active) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
-      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-      const target = e.target as HTMLElement | null;
-      if (
-        target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.tagName === "SELECT" ||
-          target.isContentEditable ||
-          target.closest('[role="radiogroup"], [role="listbox"], [role="menu"]'))
-      )
-        return;
-      const idx = projects.findIndex((p) => p.slug === active);
-      if (idx < 0) return;
-      const dir = e.key === "ArrowRight" ? 1 : -1;
-      e.preventDefault();
-      open(projects[(idx + dir + projects.length) % projects.length].slug);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [active, open]);
-
-  const close = React.useCallback(() => {
-    window.history.replaceState(null, "", window.location.pathname + window.location.search);
-    announce(null);
-    setActive(null);
-  }, [announce]);
-
-  return (
-    <CaseStudyCtx.Provider value={{ open, close, active, viewed }}>
-      {children}
-      <div role="status" aria-live="polite" className="sr-only">
-        {announcement}
-      </div>
-      <CaseStudyOverlay active={active} onClose={close} onOpen={open} />
-    </CaseStudyCtx.Provider>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* Overlay                                                              */
@@ -621,3 +457,9 @@ function CaseStudyOverlay({
     </Dialog>
   );
 }
+
+/** Default export is consumed by the `next/dynamic` loader in
+ *  `case-study-context.tsx` — this module is intentionally NOT imported
+ *  statically anywhere, so its graph (dialog + case bodies + visual
+ *  modules) stays out of the initial page bundle. */
+export default CaseStudyOverlay;

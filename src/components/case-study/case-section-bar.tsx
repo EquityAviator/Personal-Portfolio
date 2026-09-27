@@ -68,7 +68,15 @@ export function CaseSectionBar({ sections, accent }: CaseSectionBarProps) {
       className="sticky top-14 z-30 border-y border-border/60 bg-background/85 backdrop-blur print:hidden"
     >
       <div className="case-scroll mx-auto w-full max-w-5xl px-2 sm:px-4">
-        <ul className="flex items-stretch gap-0.5 overflow-x-auto py-1.5">
+        <ul
+          className={cn(
+            "flex items-stretch gap-0.5 overflow-x-auto py-1.5",
+            // Mobile: fade both edges of the horizontal scroller so cut-off
+            // labels read as "scrollable" rather than truncated. Desktop
+            // (≥md) usually fits, so no static mask there.
+            "max-md:[mask-image:linear-gradient(to_right,transparent,black_14px,black_calc(100%-14px),transparent)]"
+          )}
+        >
           {sections.map((s) => {
             const isActive = s.num === active;
             return (

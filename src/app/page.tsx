@@ -1,4 +1,4 @@
-import { CaseStudyProvider } from "@/components/case-study/case-study-overlay";
+import { CaseStudyProvider } from "@/components/case-study/case-study-context";
 import { SiteHeader } from "@/components/site/site-header";
 import { Hero } from "@/components/site/hero";
 import { ProofStrip } from "@/components/site/proof-strip";
