@@ -81,18 +81,53 @@ export function Research() {
       </div>
 
       <Reveal delay={0.1}>
-        <div className="mt-8">
+        {/* Featured evidence — CaptionAI is the richest documented research
+            program, so the section anchors on its headline verified numbers. */}
+        <div className="mt-8 overflow-hidden rounded-xl border border-border/70 bg-card">
+          <div className="flex items-center justify-between gap-3 border-b border-border/60 bg-secondary/40 px-5 py-3">
+            <p className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
+              <span className="inline-block size-1.5 rounded-full" style={{ background: "oklch(0.7 0.13 178)" }} aria-hidden />
+              Featured research — CaptionAI
+            </p>
+            <p className="hidden font-mono text-[10px] text-muted-foreground sm:block">
+              image captioning · Flickr8K · local training
+            </p>
+          </div>
           <button
             onClick={() => open("captionai")}
-            className="group inline-flex items-center gap-2 rounded-md border border-primary/40 bg-primary/5 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+            className="group block w-full px-5 py-5 text-left transition-colors hover:bg-secondary/30 sm:px-6"
+            aria-label="Open the CaptionAI case study"
           >
-            Explore the full CaptionAI experiment program
-            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+            <p className="max-w-2xl text-balance text-[15px] font-medium leading-snug tracking-tight">
+              From a DenseNet + LSTM baseline to a CLIP + GRPO serving champion
+              — one controlled experiment at a time.
+            </p>
+            <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+              {[
+                ["BLEU-1", "0.5334 → 0.6559"],
+                ["Audited techniques", "20"],
+                ["CPU serving", "~590 ms warm"],
+                ["ECE served", "0.0862"],
+              ].map(([k, v]) => (
+                <div key={k}>
+                  <dt className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-muted-foreground">
+                    {k}
+                  </dt>
+                  <dd className="mt-0.5 font-mono text-[13px] font-semibold text-foreground">
+                    {v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-4 inline-flex items-center gap-2 text-[13px] font-medium text-primary">
+              Explore the full experiment program
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+            </p>
           </button>
-          <p className="mt-2.5 font-mono text-[11px] text-muted-foreground">
-            10 model generations · 20 audited techniques · 10 documented failures · every metric protocol-annotated
-          </p>
         </div>
+        <p className="mt-2.5 font-mono text-[11px] text-muted-foreground">
+          10 model generations · 20 audited techniques · 10 documented failures · every metric protocol-annotated
+        </p>
       </Reveal>
     </Section>
   );
