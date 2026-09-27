@@ -12,72 +12,13 @@ import {
 import { getProject, projects } from "@/content/projects";
 import { profile } from "@/content/site";
 import type { ProjectSlug } from "@/content/types";
+import { CASE_SECTIONS } from "@/lib/case-sections";
 import { StoryRail } from "./primitives";
 import { CaseStudyBody, LinkRow, MetaChips } from "./case-study-body";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-/* ------------------------------------------------------------------ */
-/* Section map — one ordered, uniquely-numbered list per case study.   */
-/* Drives the desktop mini-TOC; ids (#cs-<num>) come from CaseSection. */
-/* ------------------------------------------------------------------ */
-
-const CASE_SECTIONS: Record<ProjectSlug, { num: string; title: string }[]> = {
-  "dark-pattern-hunter": [
-    { num: "01", title: "Overview" },
-    { num: "02", title: "The pipeline" },
-    { num: "03", title: "Capabilities" },
-    { num: "04", title: "Engineering decisions" },
-    { num: "05", title: "Built vs used" },
-    { num: "06", title: "Technology stack" },
-    { num: "07", title: "Design findings" },
-    { num: "08", title: "Limitations" },
-  ],
-  captionai: [
-    { num: "01", title: "Overview" },
-    { num: "02", title: "The numbers" },
-    { num: "03", title: "Experimental ladder" },
-    { num: "04", title: "Champion vs baseline" },
-    { num: "05", title: "What didn't work" },
-    { num: "06", title: "Serving engineering" },
-    { num: "07", title: "Engineering decisions" },
-    { num: "08", title: "Built vs used" },
-    { num: "09", title: "Technology stack" },
-    { num: "10", title: "Design findings" },
-    { num: "11", title: "Limitations" },
-  ],
-  chainproof: [
-    { num: "01", title: "Overview" },
-    { num: "02", title: "How it works" },
-    { num: "03", title: "Review lifecycle" },
-    { num: "04", title: "Trust stack" },
-    { num: "05", title: "Public verification" },
-    { num: "06", title: "Engineering decisions" },
-    { num: "07", title: "Built vs used" },
-    { num: "08", title: "Technology stack" },
-    { num: "09", title: "Design findings" },
-    { num: "10", title: "Limitations" },
-  ],
-  anglupol: [
-    { num: "01", title: "Overview" },
-    { num: "02", title: "Learning loop" },
-    { num: "03", title: "Vocabulary foundation" },
-    { num: "04", title: "FSRS-4.5" },
-    { num: "05", title: "Security & realtime" },
-    { num: "06", title: "Engineering decisions" },
-    { num: "07", title: "Built vs used" },
-    { num: "08", title: "Technology stack" },
-    { num: "09", title: "Design findings" },
-    { num: "10", title: "Limitations" },
-  ],
-};
-
-
-/** Sections of a case study (ordered, uniquely numbered) — exported for the
- *  command palette so ⌘K can jump straight to a section. */
-export function getCaseSections(slug: ProjectSlug) {
-  return CASE_SECTIONS[slug] ?? [];
-}
+export { getCaseSections } from "@/lib/case-sections";
 
 /** Event bridge: the command palette dispatches this to scroll the open case
  *  study to a numbered section (the scroll container lives in the overlay). */

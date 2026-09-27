@@ -5,8 +5,9 @@ import * as React from "react";
 /**
  * Very thin reading-progress line pinned under the header.
  * Helpful on a long editorial page; respects reduced motion (no animation).
+ * Optional per-project accent overrides the default amber identity.
  */
-export function ScrollProgress() {
+export function ScrollProgress({ accent }: { accent?: string }) {
   const [progress, setProgress] = React.useState(0);
 
   React.useEffect(() => {
@@ -37,8 +38,13 @@ export function ScrollProgress() {
       aria-hidden
     >
       <div
-        className="h-full origin-left bg-gradient-to-r from-primary/60 via-primary to-primary/80"
-        style={{ transform: `scaleX(${progress})`, width: "100%" }}
+        className="h-full w-full origin-left bg-gradient-to-r from-primary/60 via-primary to-primary/80"
+        style={{
+          transform: `scaleX(${progress})`,
+          background: accent
+            ? `linear-gradient(90deg, color-mix(in oklch, ${accent} 55%, transparent), ${accent})`
+            : undefined,
+        }}
       />
     </div>
   );

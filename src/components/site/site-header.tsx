@@ -17,10 +17,10 @@ import {
 } from "@/components/ui/command";
 import {
   CASE_JUMP_EVENT,
-  getCaseSections,
   printCaseStudy,
   useCaseStudy,
 } from "@/components/case-study/case-study-overlay";
+import { getCaseSections } from "@/lib/case-sections";
 import { printResume } from "@/components/site/resume-print";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { navLinks, profile } from "@/content/site";

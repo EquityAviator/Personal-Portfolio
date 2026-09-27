@@ -7,7 +7,12 @@ import { profile } from "@/content/site";
 import { PROJECT_TYPE_LABELS } from "@/content/types";
 import { SITE_URL } from "@/lib/site-url";
 import { estimateReadMinutes } from "@/lib/reading";
-import { CaseStudyProvider } from "@/components/case-study/case-study-overlay";
+import {
+  CaseStudyProvider,
+} from "@/components/case-study/case-study-overlay";
+import { getCaseSections } from "@/lib/case-sections";
+import { CaseSectionBar } from "@/components/case-study/case-section-bar";
+import { ScrollProgress } from "@/components/site/scroll-progress";
 import {
   CaseStudyBody,
   LinkRow,
@@ -161,6 +166,12 @@ export default async function WorkPage({
                 </p>
               </div>
             </header>
+
+            {/* ---------- Reading progress (per-project accent) ---------- */}
+            <ScrollProgress accent={project.accent} />
+
+            {/* ---------- Sticky section rail (scroll-spy) ---------- */}
+            <CaseSectionBar sections={getCaseSections(project.slug)} accent={project.accent} />
 
             {/* ---------- Media slot (screenshots deferred — layout ready) ---------- */}
             <div className="mx-auto w-full max-w-5xl px-4 pt-8 sm:px-6">

@@ -12,7 +12,7 @@ import {
   SplitList,
   StackGrid,
 } from "./primitives";
-import { DphPipeline } from "./dph-visual";
+import { DphPipeline, DataEngine, PatternTaxonomy } from "./dph-visual";
 import {
   ChampionTable,
   ExperimentLadder,
@@ -47,9 +47,9 @@ import type { Project, ProjectSlug } from "@/content/types";
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
 /** Where the shared (non-project-specific) section numbering starts.
- *  Must stay in sync with CASE_SECTIONS in case-study-overlay.tsx. */
+ *  Must stay in sync with CASE_SECTIONS in src/lib/case-sections.ts. */
 const TRAIL_START: Record<ProjectSlug, number> = {
-  "dark-pattern-hunter": 4,
+  "dark-pattern-hunter": 6,
   captionai: 7,
   chainproof: 6,
   anglupol: 6,
@@ -160,7 +160,12 @@ export function CaseStudyBody({
         <>
           <div className="border-t border-border/50" />
           <DphPipeline accent={project.accent} />
-          <CaseSection num="03" title="Capabilities">
+          <div className="border-t border-border/50" />
+          <PatternTaxonomy accent={project.accent} />
+          <div className="border-t border-border/50" />
+          <DataEngine accent={project.accent} />
+          <div className="border-t border-border/50" />
+          <CaseSection num="05" title="Capabilities">
             <FeaturesGrid features={project.features} accent={project.accent} />
           </CaseSection>
         </>
