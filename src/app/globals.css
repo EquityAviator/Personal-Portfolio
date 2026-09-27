@@ -1,0 +1,753 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.5rem;
+  /* Warm paper light mode */
+  --background: oklch(0.982 0.003 85);
+  --foreground: oklch(0.215 0.008 75);
+  --card: oklch(0.995 0.002 85);
+  --card-foreground: oklch(0.215 0.008 75);
+  --popover: oklch(0.995 0.002 85);
+  --popover-foreground: oklch(0.215 0.008 75);
+  /* Single identity accent: amber ( brass / engineering ).
+     Light-mode value is deepened to ≥4.5:1 on paper for small text (WCAG AA). */
+  --primary: oklch(0.53 0.13 62);
+  --primary-foreground: oklch(0.99 0.003 85);
+  --secondary: oklch(0.955 0.004 80);
+  --secondary-foreground: oklch(0.28 0.01 75);
+  --muted: oklch(0.955 0.004 80);
+  --muted-foreground: oklch(0.5 0.012 75);
+  --accent: oklch(0.955 0.004 80);
+  --accent-foreground: oklch(0.28 0.01 75);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.006 80);
+  --input: oklch(0.9 0.006 80);
+  --ring: oklch(0.53 0.13 62);
+  --chart-1: oklch(0.666 0.179 58.318);
+  --chart-2: oklch(0.7 0.13 178);
+  --chart-3: oklch(0.68 0.15 162);
+  --chart-4: oklch(0.66 0.2 15);
+  --chart-5: oklch(0.78 0.17 75);
+  --sidebar: oklch(0.982 0.003 85);
+  --sidebar-foreground: oklch(0.215 0.008 75);
+  --sidebar-primary: oklch(0.53 0.13 62);
+  --sidebar-primary-foreground: oklch(0.99 0.003 85);
+  --sidebar-accent: oklch(0.955 0.004 80);
+  --sidebar-accent-foreground: oklch(0.28 0.01 75);
+  --sidebar-border: oklch(0.9 0.006 80);
+  --sidebar-ring: oklch(0.53 0.13 62);
+}
+
+.dark {
+  /* Deep warm charcoal */
+  --background: oklch(0.145 0.005 75);
+  --foreground: oklch(0.955 0.005 85);
+  --card: oklch(0.178 0.006 75);
+  --card-foreground: oklch(0.955 0.005 85);
+  --popover: oklch(0.178 0.006 75);
+  --popover-foreground: oklch(0.955 0.005 85);
+  --primary: oklch(0.8 0.16 80);
+  --primary-foreground: oklch(0.2 0.02 75);
+  --secondary: oklch(0.222 0.007 75);
+  --secondary-foreground: oklch(0.955 0.005 85);
+  --muted: oklch(0.222 0.007 75);
+  --muted-foreground: oklch(0.68 0.012 80);
+  --accent: oklch(0.222 0.007 75);
+  --accent-foreground: oklch(0.955 0.005 85);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.955 0.005 85 / 10%);
+  --input: oklch(0.955 0.005 85 / 14%);
+  --ring: oklch(0.8 0.16 80);
+  --chart-1: oklch(0.8 0.17 82);
+  --chart-2: oklch(0.7 0.13 178);
+  --chart-3: oklch(0.7 0.15 162);
+  --chart-4: oklch(0.7 0.19 17);
+  --chart-5: oklch(0.78 0.17 75);
+  --sidebar: oklch(0.178 0.006 75);
+  --sidebar-foreground: oklch(0.955 0.005 85);
+  --sidebar-primary: oklch(0.8 0.16 80);
+  --sidebar-primary-foreground: oklch(0.2 0.02 75);
+  --sidebar-accent: oklch(0.222 0.007 75);
+  --sidebar-accent-foreground: oklch(0.955 0.005 85);
+  --sidebar-border: oklch(0.955 0.005 85 / 10%);
+  --sidebar-ring: oklch(0.8 0.16 80);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+    /* Page-level thin scrollbar (theme-aware, WebKit + Firefox) */
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
+  }
+  html::-webkit-scrollbar {
+    width: 8px;
+  }
+  html::-webkit-scrollbar-thumb {
+    background: color-mix(in oklch, var(--foreground) 20%, transparent);
+    border-radius: 999px;
+  }
+  html::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv05";
+  }
+  /* Balanced headline wrapping (progressive enhancement) */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 22%, transparent);
+  }
+  /* Native controls (checkbox, radio, progress) inherit the accent */
+  :root {
+    accent-color: var(--primary);
+  }
+  :focus-visible {
+    outline: 2px solid color-mix(in oklch, var(--primary) 70%, transparent);
+    outline-offset: 2px;
+  }
+}
+
+/* ---- Ambient engineering grid (very subtle, secondary to content) ---- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
+}
+
+/* ---- Thin custom scrollbar for long case-study panels ---- */
+.case-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
+}
+.case-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.case-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--foreground) 20%, transparent);
+  border-radius: 999px;
+}
+.case-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---- Case study: switcher rows / scrollable rows without visible scrollbars ---- */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- Keyboard hint chips (case-study ←/→ switcher) ---- */
+.kbd-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  padding: 0.05rem 0.3rem;
+  border: 1px solid color-mix(in oklch, var(--foreground) 14%, transparent);
+  border-bottom-width: 2px;
+  border-radius: 0.25rem;
+  background: var(--secondary);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+
+/* ---- Case-study mini TOC (desktop) ---- */
+.case-toc button[data-active="true"] .case-toc-num {
+  color: var(--pa);
+}
+html:not(.dark) .case-toc button[data-active="true"] .case-toc-num {
+  color: color-mix(in oklch, var(--pa) 66%, black);
+}
+.case-toc button[data-active="true"] .case-toc-title {
+  color: var(--foreground);
+}
+
+/* ---- Case-study stage swap: subtle enter transition (keyed by stage) ---- */
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.stage-in {
+  animation: stage-in 0.26s ease both;
+}
+
+/* ---- Header nav: animated underline + active state ---- */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 1px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+  opacity: 0.85;
+}
+.nav-link:hover::after,
+.nav-link[data-active="true"]::after {
+  transform: scaleX(1);
+}
+.nav-link[data-active="true"] {
+  color: var(--foreground);
+}
+
+/* ---- Footer links: shared animated underline (mirrors header nav) ---- */
+.link-underline {
+  position: relative;
+  width: fit-content;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: color-mix(in oklch, var(--primary) 65%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ---- Per-project accent text (theme-aware, WCAG-checked) ----
+   --pa is set inline on the scope (work card / case-study overlay).
+   Dark: accent as authored (bright on charcoal). Light: darkened ~34%
+   toward black in oklch — keeps hue, lands ≥4.5:1 on paper. */
+.pa-text {
+  color: var(--pa);
+}
+html:not(.dark) .pa-text {
+  color: color-mix(in oklch, var(--pa) 66%, black);
+}
+
+/* ---- Work card: cursor spotlight (pointer devices only) ---- */
+@media (hover: hover) and (pointer: fine) {
+  .work-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      360px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklch, var(--pa) 7%, transparent),
+      transparent 65%
+    );
+  }
+  .work-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ---- Work card: accent-aware hover glow (--pa set inline per card) ---- */
+.work-card {
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.work-card:hover {
+  border-color: color-mix(in oklch, var(--pa) 45%, transparent);
+  box-shadow:
+    0 12px 48px -16px color-mix(in oklch, var(--pa) 28%, transparent),
+    0 4px 16px -8px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Hero: system-flow rail with a faint accent pulse travelling down ----
+   Purely decorative; the global prefers-reduced-motion rule freezes it. */
+.flow-line {
+  position: relative;
+  width: 1px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--border), color-mix(in oklch, var(--border) 30%, transparent));
+}
+.flow-line::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 16px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklch, var(--primary) 60%, transparent),
+    transparent
+  );
+  animation: flow-pulse 3s ease-in-out infinite;
+  animation-delay: var(--fd, 0s);
+  opacity: 0.55;
+}
+@keyframes flow-pulse {
+  0% {
+    transform: translateY(-18px);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.55;
+  }
+  75% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(44px);
+    opacity: 0;
+  }
+}
+
+/* ---- Print: clean résumé-style output (Cmd/Ctrl+P → PDF) ---- */
+@page {
+  margin: 14mm;
+}
+@media print {
+  :root,
+  .dark {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.145 0 0);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.96 0 0);
+    --secondary-foreground: oklch(0.145 0 0);
+    --muted: oklch(0.96 0 0);
+    --muted-foreground: oklch(0.42 0 0);
+    --accent: oklch(0.96 0 0);
+    --accent-foreground: oklch(0.145 0 0);
+    --border: oklch(0.85 0 0);
+    --input: oklch(0.85 0 0);
+    --ring: oklch(0.145 0 0);
+  }
+  html {
+    scroll-behavior: auto;
+    background: white !important;
+  }
+  header,
+  footer,
+  .bg-grid,
+  [data-slot="scroll-progress"] {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  a {
+    text-decoration: underline;
+  }
+  article,
+  .print-avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  section {
+    break-inside: auto;
+  }
+  .print-avoid-break table {
+    font-size: 11px;
+  }
+}
+
+/* ---- Print: when a case-study overlay is open, print ONLY that document.
+   body.case-print is toggled by the overlay (see case-study-overlay.tsx). */
+@media print {
+  body.case-print > *:not([data-slot="dialog-content"]) {
+    display: none !important;
+  }
+  body.case-print [data-slot="dialog-content"] {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    translate: none !important;
+    rotate: none !important;
+    scale: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  html body.case-print [data-slot="dialog-content"] {
+    position: static !important;
+    translate: none !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+  }
+  body.case-print .case-scroll {
+    overflow: visible !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+  }
+  body.case-print [data-slot="dialog-close"] {
+    display: none !important;
+  }
+}
+
+/* ---- Print: résumé-only output. body.resume-print is toggled by
+   printResume() (see resume-print.tsx) — prints the condensed résumé
+   document instead of the full portfolio. */
+@media print {
+  body.resume-print > *:not([data-resume-print]) {
+    display: none !important;
+  }
+  body.resume-print [data-resume-print] {
+    display: block !important;
+  }
+}
+
+/* Résumé document typography (only ever visible in print) */
+.resume-doc {
+  color: #17150f;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+}
+.resume-rule {
+  height: 4px;
+  background: oklch(0.53 0.13 62);
+  margin-bottom: 14pt;
+}
+.resume-doc h1 {
+  font-size: 21pt;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.resume-role {
+  margin-top: 3pt;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 9pt;
+  color: #4c473d;
+}
+.resume-contact {
+  margin-top: 7pt;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 8.5pt;
+  color: #4c473d;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2pt 6pt;
+}
+.resume-availability {
+  margin-top: 4pt;
+  font-size: 9.5pt;
+  font-weight: 550;
+}
+.resume-section {
+  margin-top: 13pt;
+}
+.resume-heading {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 8pt;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #4c473d;
+  border-bottom: 0.75pt solid #d8d2c6;
+  padding-bottom: 3pt;
+  margin-bottom: 6pt;
+}
+.resume-summary {
+  max-width: 96%;
+}
+.resume-focus p {
+  display: flex;
+  gap: 8pt;
+  margin-top: 2.5pt;
+}
+.resume-focus-domain {
+  flex: 0 0 88pt;
+  font-weight: 600;
+  font-size: 9.5pt;
+}
+.resume-focus-items {
+  font-size: 9.5pt;
+  color: #33302a;
+}
+.resume-project {
+  margin-top: 7pt;
+}
+.resume-project-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2pt 8pt;
+}
+.resume-project-name {
+  font-weight: 650;
+  font-size: 11pt;
+}
+.resume-project-meta {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 8pt;
+  color: #4c473d;
+}
+.resume-project-tagline {
+  margin-top: 1.5pt;
+}
+.resume-project-stack {
+  margin-top: 0.5pt;
+  font-size: 9pt;
+  color: #33302a;
+}
+.resume-project-link {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 8pt;
+  color: #6b6353;
+}
+.resume-note {
+  margin-top: 8pt;
+  font-size: 8.5pt;
+  font-style: italic;
+  color: #6b6353;
+}
+.resume-skills p {
+  margin-top: 3pt;
+}
+.resume-skill-group {
+  display: block;
+  font-weight: 600;
+  font-size: 9.5pt;
+}
+.resume-skill-items {
+  font-size: 9pt;
+  color: #33302a;
+}
+.resume-education p + p {
+  margin-top: 6pt;
+}
+.resume-edu-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2pt 8pt;
+}
+.resume-edu-school {
+  font-weight: 650;
+  font-size: 10.5pt;
+}
+.resume-edu-detail {
+  display: block;
+  font-size: 9pt;
+  color: #33302a;
+}
+.resume-footer {
+  margin-top: 16pt;
+  border-top: 0.75pt solid #d8d2c6;
+  padding-top: 5pt;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 7.5pt;
+  color: #6b6353;
+}
+
+/* One-page résumé setting — same content, denser typography.
+   Toggled by printResume(true) via body.resume-compact. */
+@media print {
+  body.resume-compact .resume-doc {
+    font-size: 8.8pt;
+    line-height: 1.35;
+  }
+  body.resume-compact .resume-rule {
+    height: 3px;
+    margin-bottom: 6pt;
+  }
+  body.resume-compact .resume-doc h1 {
+    font-size: 16pt;
+  }
+  body.resume-compact .resume-role {
+    font-size: 8pt;
+    margin-top: 2pt;
+  }
+  body.resume-compact .resume-contact {
+    font-size: 7.5pt;
+    margin-top: 3pt;
+    gap: 1.5pt 5pt;
+  }
+  body.resume-compact .resume-availability {
+    font-size: 8pt;
+    margin-top: 2pt;
+  }
+  body.resume-compact .resume-section {
+    margin-top: 6.5pt;
+  }
+  body.resume-compact .resume-heading {
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    padding-bottom: 1.5pt;
+    margin-bottom: 3.5pt;
+  }
+  body.resume-compact .resume-focus p {
+    gap: 6pt;
+    margin-top: 1.5pt;
+  }
+  body.resume-compact .resume-focus-domain {
+    flex: 0 0 80pt;
+    font-size: 8.4pt;
+  }
+  body.resume-compact .resume-focus-items {
+    font-size: 8.4pt;
+  }
+  body.resume-compact .resume-project {
+    margin-top: 3pt;
+  }
+  body.resume-compact .resume-project-name {
+    font-size: 9.5pt;
+  }
+  body.resume-compact .resume-project-meta {
+    font-size: 7.5pt;
+  }
+  body.resume-compact .resume-project-tagline {
+    margin-top: 0.5pt;
+    font-size: 8.5pt;
+  }
+  body.resume-compact .resume-project-stack {
+    margin-top: 0.5pt;
+    font-size: 8pt;
+  }
+  body.resume-compact .resume-project-link {
+    font-size: 7.2pt;
+  }
+  body.resume-compact .resume-note {
+    margin-top: 3pt;
+    font-size: 7.5pt;
+  }
+  body.resume-compact .resume-skills {
+    column-count: 3;
+    column-gap: 11pt;
+  }
+  body.resume-compact .resume-skills p {
+    break-inside: avoid;
+  }
+  body.resume-compact .resume-skills p + p {
+    margin-top: 3pt;
+  }
+  body.resume-compact .resume-skill-group {
+    font-size: 8pt;
+  }
+  body.resume-compact .resume-skill-items {
+    font-size: 7.5pt;
+    line-height: 1.32;
+  }
+  body.resume-compact .resume-education {
+    column-count: 2;
+    column-gap: 12pt;
+  }
+  body.resume-compact .resume-education p {
+    break-inside: avoid;
+  }
+  body.resume-compact .resume-education p + p {
+    margin-top: 0;
+  }
+  body.resume-compact .resume-edu-school {
+    font-size: 8.7pt;
+  }
+  body.resume-compact .resume-edu-detail {
+    font-size: 7.8pt;
+  }
+  body.resume-compact .resume-footer {
+    margin-top: 5pt;
+    padding-top: 2.5pt;
+    font-size: 6.5pt;
+  }
+}
+
+/* ---- Motion: respect user preference globally ---- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
