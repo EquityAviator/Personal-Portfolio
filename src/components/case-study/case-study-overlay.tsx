@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowRight, Check, ExternalLink, Github, Globe, Link2, Printer } from "lucide-react";
+import { Check, Link2, Printer } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import {
   Dialog,
@@ -12,34 +12,8 @@ import {
 import { getProject, projects } from "@/content/projects";
 import { profile } from "@/content/site";
 import type { ProjectSlug } from "@/content/types";
-import {
-  CalloutCard,
-  CaseSection,
-  FindingsList,
-  LimitationsList,
-  SplitList,
-  StackGrid,
-  StoryRail,
-} from "./primitives";
-import { DphPipeline } from "./dph-visual";
-import {
-  ChampionTable,
-  ExperimentLadder,
-  FailureLedger,
-  ServingEngineering,
-} from "./captionai-visual";
-import {
-  LifecycleStates,
-  TrustStack,
-  VerifySim,
-} from "./chainproof-visual";
-import {
-  FsrsSimulator,
-  LearningLoop,
-  SecurityRealtime,
-  VocabularyFoundation,
-} from "./anglupol-visual";
-import { MetricGrid } from "./primitives";
+import { StoryRail } from "./primitives";
+import { CaseStudyBody, LinkRow, MetaChips } from "./case-study-body";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -98,13 +72,6 @@ const CASE_SECTIONS: Record<ProjectSlug, { num: string; title: string }[]> = {
   ],
 };
 
-/** First number of the shared trailing sections (callouts, built/used…). */
-const TRAIL_START: Record<ProjectSlug, number> = {
-  "dark-pattern-hunter": 4,
-  captionai: 7,
-  chainproof: 6,
-  anglupol: 6,
-};
 
 /** Sections of a case study (ordered, uniquely numbered) — exported for the
  *  command palette so ⌘K can jump straight to a section. */
@@ -116,8 +83,6 @@ export function getCaseSections(slug: ProjectSlug) {
  *  study to a numbered section (the scroll container lives in the overlay). */
 export const CASE_JUMP_EVENT = "case-study:jump";
 export type CaseJumpDetail = { num: string };
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
 
 /** sessionStorage key for the "already viewed" case-study list. */
 const VIEWED_KEY = "case-study:viewed";
@@ -281,79 +246,6 @@ export function CaseStudyProvider({ children }: { children: React.ReactNode }) {
 /* ------------------------------------------------------------------ */
 /* Overlay                                                              */
 /* ------------------------------------------------------------------ */
-
-function LinkRow({ project }: { project: NonNullable<ReturnType<typeof getProject>> }) {
-  const icons = { github: Github, demo: Globe, external: ExternalLink };
-  return (
-    <div className="flex flex-wrap gap-2">
-      {project.links.map((l) => {
-        const Icon = icons[l.icon ?? "external"];
-        return (
-          <a
-            key={l.href + l.label}
-            href={l.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-secondary/50 px-2.5 py-1 text-[12px] text-foreground/80 transition-colors hover:border-primary/40 hover:text-foreground"
-          >
-            <Icon className="size-3.5" aria-hidden />
-            {l.label}
-            <ExternalLink className="size-3 text-muted-foreground" aria-hidden />
-          </a>
-        );
-      })}
-    </div>
-  );
-}
-
-function MetaChips({ project }: { project: NonNullable<ReturnType<typeof getProject>> }) {
-  const meta = [
-    ["Role", project.role],
-    ["Timeline", project.timeline],
-    ["Status", project.status],
-    ["Domain", project.domain],
-  ];
-  return (
-    <dl className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-4">
-      {meta.map(([k, v]) => (
-        <div key={k}>
-          <dt className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">
-            {k}
-          </dt>
-          <dd className="mt-0.5 text-[12px] leading-snug text-foreground/85">{v}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-function FeaturesGrid({
-  features,
-  accent,
-}: {
-  features: NonNullable<ReturnType<typeof getProject>>["features"];
-  accent: string;
-}) {
-  return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      {features.map((f) => (
-        <div key={f.title} className="rounded-xl border border-border/70 bg-card p-4 sm:p-5">
-          <p className="flex items-center gap-2 text-[13.5px] font-medium">
-            <span
-              className="inline-block size-1.5 rounded-full"
-              style={{ background: accent }}
-              aria-hidden
-            />
-            {f.title}
-          </p>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
-            {f.description}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function CaseSwitcher({
   activeSlug,
@@ -604,8 +496,6 @@ function CaseStudyOverlay({
     project
       ? projects[(projects.findIndex((p) => p.slug === project.slug) + 1) % projects.length]
       : undefined;
-
-  // Copy deep-link (includes #case-<slug>) so the exact case study can be shared.
   const { toast } = useToast();
   const [linkCopied, setLinkCopied] = React.useState(false);
   const copyLink = async () => {
@@ -623,7 +513,6 @@ function CaseStudyOverlay({
     }
   };
 
-  const trail = project ? TRAIL_START[project.slug] : 6;
 
   // Keep og/twitter meta in sync with the open case study so a copied link
   // carries the right preview. Restores site defaults when the overlay closes.
@@ -766,138 +655,7 @@ function CaseStudyOverlay({
                 }}
                 aria-hidden
               />
-              <CaseSection num="01" title="Overview">
-                <div className="max-w-3xl space-y-3.5">
-                  {project.intro.map((p, i) => (
-                    <p key={i} className="text-[14px] leading-relaxed text-foreground/85">
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              </CaseSection>
-
-              {project.slug === "dark-pattern-hunter" && (
-                <>
-                  <div className="border-t border-border/50" />
-                  <DphPipeline accent={project.accent} />
-                  <CaseSection num="03" title="Capabilities">
-                    <FeaturesGrid features={project.features} accent={project.accent} />
-                  </CaseSection>
-                </>
-              )}
-
-              {project.slug === "captionai" && (
-                <>
-                  <div className="border-t border-border/50" />
-                  <CaseSection num="02" title="The numbers — protocol-annotated">
-                    <MetricGrid
-                      metrics={[
-                        { label: "BLEU-1", value: "0.6559", context: "+22.9% vs baseline · full 1,214-image validation split" },
-                        { label: "BLEU-4", value: "0.1727", context: "+41.8% vs baseline" },
-                        { label: "ROUGE-L", value: "0.2782", context: "+25.5% vs baseline" },
-                        { label: "CIDEr-D", value: "0.5243", context: "trade-off vs CLIP-CE 0.6207 — documented" },
-                        { label: "CHAIR-img", value: "47.3%", context: "down from CLIP-CE's 61.9% (CHAIR-lite protocol)" },
-                        { label: "ECE served", value: "0.0862", context: "raw 0.2542 → T=1.3 temperature scaling" },
-                        { label: "CPU latency", value: "~590 ms", context: "warm request · 16 GB CPU-only machine" },
-                        { label: "Model size", value: "8.42M", context: "parameters · 32 MB checkpoint" },
-                      ]}
-                    />
-                  </CaseSection>
-                  <div className="border-t border-border/50" />
-                  <ExperimentLadder accent={project.accent} />
-                  <div className="border-t border-border/50" />
-                  <ChampionTable />
-                  <div className="border-t border-border/50" />
-                  <FailureLedger />
-                  <div className="border-t border-border/50" />
-                  <ServingEngineering />
-                </>
-              )}
-
-              {project.slug === "chainproof" && (
-                <>
-                  <div className="border-t border-border/50" />
-                  <CaseSection num="02" title="How it works">
-                    <FeaturesGrid features={project.features} accent={project.accent} />
-                  </CaseSection>
-                  <div className="border-t border-border/50" />
-                  <LifecycleStates accent={project.accent} />
-                  <div className="border-t border-border/50" />
-                  <TrustStack accent={project.accent} />
-                  <div className="border-t border-border/50" />
-                  <VerifySim accent={project.accent} />
-                </>
-              )}
-
-              {project.slug === "anglupol" && (
-                <>
-                  <div className="border-t border-border/50" />
-                  <LearningLoop accent={project.accent} />
-                  <div className="border-t border-border/50" />
-                  <VocabularyFoundation />
-                  <div className="border-t border-border/50" />
-                  <FsrsSimulator accent={project.accent} />
-                  <div className="border-t border-border/50" />
-                  <SecurityRealtime />
-                </>
-              )}
-
-              {/* Callouts */}
-              <div className="border-t border-border/50" />
-              <CaseSection num={pad2(trail)} title="Engineering decisions & honesty">
-                <div className="grid gap-3 md:grid-cols-2">
-                  {project.callouts.map((c) => (
-                    <CalloutCard key={c.title} callout={c} />
-                  ))}
-                </div>
-              </CaseSection>
-
-              <div className="border-t border-border/50" />
-              <CaseSection num={pad2(trail + 1)} title="What I built vs what I used">
-                <SplitList built={project.built} used={project.used} />
-              </CaseSection>
-
-              <div className="border-t border-border/50" />
-              <CaseSection num={pad2(trail + 2)} title="Technology stack">
-                <StackGrid stack={project.stack} />
-              </CaseSection>
-
-              <div className="border-t border-border/50" />
-              <CaseSection num={pad2(trail + 3)} title="Design findings">
-                <FindingsList findings={project.findings} />
-              </CaseSection>
-
-              <div className="border-t border-border/50" />
-              <CaseSection num={pad2(trail + 4)} title="Limitations — stated plainly">
-                <LimitationsList items={project.limitations} />
-              </CaseSection>
-
-              {/* Next case */}
-              {next && (
-                <div className="border-t border-border/50 print:hidden">
-                  <button
-                    onClick={() => onOpen(next.slug)}
-                    className="group flex w-full items-center justify-between gap-4 px-5 py-6 text-left transition-colors hover:bg-secondary/40 sm:px-8"
-                  >
-                    <span>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                        Next case study
-                      </span>
-                      <span className="mt-1 block text-lg font-semibold tracking-tight">
-                        {next.name}
-                      </span>
-                      <span className="mt-0.5 block text-[12.5px] text-muted-foreground">
-                        {next.categories.join(" · ")}
-                      </span>
-                    </span>
-                    <ArrowRight
-                      className="size-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1"
-                      style={{ color: next.accent }}
-                      aria-hidden
-                    />
-                  </button>
-                </div>
-              )}
+              <CaseStudyBody project={project} next={next} onOpenNext={onOpen} />
             </div>
           </>
         )}

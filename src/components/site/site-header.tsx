@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Command, FileDown, Moon, Sun, Terminal, UserRoundPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +31,7 @@ export function CommandPalette() {
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
   const { open: openCase, close: closeCase, active: activeCase } = useCaseStudy();
+  const router = useRouter();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -46,12 +49,17 @@ export function CommandPalette() {
     fn();
   };
 
+  // Section jump works on the homepage; from a case-study route it falls
+  // back to navigating home with the hash (browser scrolls on arrival).
   const go = (href: string) =>
-    run(() =>
-      document
-        .querySelector(href)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-    );
+    run(() => {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        router.push(`/${href}`);
+      }
+    });
 
   // While a case study is open, offer next/prev/close right in the palette.
   const activeIdx = projects.findIndex((p) => p.slug === activeCase);
@@ -306,6 +314,8 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const active = useActiveSection();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -320,6 +330,9 @@ export function SiteHeader() {
       .querySelector(href)
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // From a case-study route, nav items link home with the hash.
+  const navTarget = (href: string) => (isHome ? href : `/${href}`);
 
   return (
     <header
@@ -338,29 +351,54 @@ export function SiteHeader() {
         Skip to content
       </a>
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group flex items-center gap-2.5"
-          aria-label="Back to top"
-        >
-          <span
-            className="grid size-7 place-items-center rounded-md border border-primary/40 bg-primary/10 text-primary"
-            aria-hidden
+        {isHome ? (
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="group flex items-center gap-2.5"
+            aria-label="Back to top"
           >
-            <Terminal className="size-3.5" />
-          </span>
-          <span className="font-mono text-[13px] font-medium tracking-tight text-foreground/90 group-hover:text-foreground">
-            {profile.shortName}
-          </span>
-        </button>
+            <span
+              className="grid size-7 place-items-center rounded-md border border-primary/40 bg-primary/10 text-primary"
+              aria-hidden
+            >
+              <Terminal className="size-3.5" />
+            </span>
+            <span className="font-mono text-[13px] font-medium tracking-tight text-foreground/90 group-hover:text-foreground">
+              {profile.shortName}
+            </span>
+          </button>
+        ) : (
+          <Link
+            href="/"
+            className="group flex items-center gap-2.5"
+            aria-label="Back to home"
+          >
+            <span
+              className="grid size-7 place-items-center rounded-md border border-primary/40 bg-primary/10 text-primary"
+              aria-hidden
+            >
+              <Terminal className="size-3.5" />
+            </span>
+            <span className="font-mono text-[13px] font-medium tracking-tight text-foreground/90 group-hover:text-foreground">
+              {profile.shortName}
+            </span>
+            <span className="font-mono text-[10px] text-muted-foreground" aria-hidden>
+              / home
+            </span>
+          </Link>
+        )}
 
         <nav className="hidden items-center gap-0.5 md:flex" aria-label="Primary">
           {navLinks.map((l) => {
-            const isActive = active === l.href.slice(1);
+            const isActive = isHome && active === l.href.slice(1);
             return (
-              <button
+              <Link
                 key={l.href}
-                onClick={() => go(l.href)}
+                href={navTarget(l.href)}
+                onClick={!isHome ? undefined : (e) => {
+                  e.preventDefault();
+                  go(l.href);
+                }}
                 data-active={isActive}
                 aria-current={isActive ? "true" : undefined}
                 className={cn(
@@ -371,7 +409,7 @@ export function SiteHeader() {
                 )}
               >
                 {l.label}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -426,19 +464,20 @@ export function SiteHeader() {
       >
         <nav className="mx-auto flex w-full max-w-6xl flex-col px-4 py-3" aria-label="Mobile">
           {navLinks.map((l, i) => (
-            <button
+            <Link
               key={l.href}
-              onClick={() => go(l.href)}
+              href={navTarget(l.href)}
+              onClick={() => setMenuOpen(false)}
               className={cn(
                 "flex items-baseline gap-3 rounded-md px-2 py-2.5 text-left transition-colors hover:bg-secondary hover:text-foreground",
-                active === l.href.slice(1) ? "text-foreground" : "text-muted-foreground"
+                isHome && active === l.href.slice(1) ? "text-foreground" : "text-muted-foreground"
               )}
             >
               <span className="font-mono text-[10px] text-primary" aria-hidden>
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-sm">{l.label}</span>
-            </button>
+            </Link>
           ))}
           <div className="mt-2 flex gap-2 border-t border-border/60 pt-3">
             <Button

@@ -33,12 +33,12 @@ export const heroStatement = {
   tail: "— not AI bolted onto a product.",
 };
 
+// V2 compact primary navigation (spec §3): Work, About, Research, Contact.
+// Resume lives as the dedicated header action; Home/logo is the return path.
 export const navLinks = [
   { label: "Work", href: "#work" },
-  { label: "Process", href: "#process" },
-  { label: "Capabilities", href: "#capabilities" },
-  { label: "Research", href: "#research" },
   { label: "About", href: "#about" },
+  { label: "Research", href: "#research" },
   { label: "Contact", href: "#contact" },
 ] as const;
 

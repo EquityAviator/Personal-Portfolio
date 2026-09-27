@@ -4,97 +4,130 @@ import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCaseStudy } from "@/components/case-study/case-study-overlay";
+import Link from "next/link";
 import { profile, heroValue } from "@/content/site";
 import { projects } from "@/content/projects";
 import type { ProjectSlug } from "@/content/types";
 
-/** Each pipeline stage links to the case studies that demonstrate it. */
-const flowNodes: {
+/**
+ * V2 signature interaction — the system map.
+ *
+ * INPUT → MODEL/LOGIC → SYSTEM → OUTPUT: hover, focus or pin a stage and the
+ * work that demonstrates it is emphasized (everything else recedes). Nodes
+ * are real buttons (keyboard-reachable), the active state is non-animated
+ * under reduced motion, and every case chip links to its canonical route.
+ */
+const flowStages: {
   label: string;
   detail: string;
   cases: ProjectSlug[];
 }[] = [
   { label: "INPUT", detail: "pages · images · text", cases: ["dark-pattern-hunter", "captionai"] },
-  { label: "PROCESS", detail: "extension · DOM · dataset", cases: ["dark-pattern-hunter"] },
-  { label: "AI / LOGIC", detail: "VLM · CLIP · GRPO · FSRS", cases: ["captionai", "anglupol"] },
+  { label: "MODEL / LOGIC", detail: "VLM · CLIP · GRPO · FSRS", cases: ["captionai", "dark-pattern-hunter"] },
   { label: "SYSTEM", detail: "API · events · state machine", cases: ["chainproof", "anglupol"] },
-  { label: "OUTPUT", detail: "reports · captions · reviews", cases: ["dark-pattern-hunter", "chainproof"] },
+  { label: "OUTPUT", detail: "live products · verified records", cases: ["chainproof", "anglupol"] },
 ];
 
 function SystemFlow() {
   const reduce = useReducedMotion();
-  const { open } = useCaseStudy();
+  const [active, setActive] = React.useState<string | null>(null);
+  const [pinned, setPinned] = React.useState<string | null>(null);
+
+  // Hover/focus previews; click pins. Pin survives pointer-leave.
+  const shown = pinned ?? active;
+  const set = (label: string | null) => setActive(label);
+
   return (
     <motion.ol
       className="relative space-y-0"
       initial="hidden"
       animate="show"
-      aria-label="Abstract system flow of Hamza's engineering profile — each stage links to the case studies that demonstrate it"
+      aria-label="System map of Hamza's engineering profile — select a stage to highlight the projects that demonstrate it"
       variants={{
         hidden: {},
         show: { transition: { staggerChildren: reduce ? 0 : 0.14, delayChildren: 0.3 } },
       }}
+      onMouseLeave={() => set(null)}
     >
-      {flowNodes.map((node, i) => (
-        <motion.li
-          key={node.label}
-          className="relative flex items-start gap-4"
-          variants={{
-            hidden: { opacity: 0, x: 12 },
-            show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] } },
-          }}
-        >
-          {/* rail */}
-          <div className="relative flex w-6 shrink-0 flex-col items-center" aria-hidden>
-            <span
-              className={`z-10 mt-1 size-2 rounded-full border ${
-                i === 2
-                  ? "border-primary bg-primary"
-                  : "border-border bg-background"
-              }`}
-            />
-            {i < flowNodes.length - 1 && (
+      {flowStages.map((node, i) => {
+        const isDimmed = shown !== null && shown !== node.label;
+        return (
+          <motion.li
+            key={node.label}
+            className="relative flex items-start gap-4"
+            variants={{
+              hidden: { opacity: 0, x: 12 },
+              show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] } },
+            }}
+          >
+            {/* rail */}
+            <div className="relative flex w-6 shrink-0 flex-col items-center" aria-hidden>
               <span
-                className="flow-line h-10"
-                style={{ ["--fd" as string]: `${i * 0.55}s` }}
+                className={`z-10 mt-1 size-2 rounded-full border transition-colors duration-200 ${
+                  shown === node.label
+                    ? "border-primary bg-primary"
+                    : "border-border bg-background"
+                }`}
               />
-            )}
-          </div>
-          <div className="pb-2">
-            <p
-              className={`font-mono text-[11px] tracking-[0.18em] ${
-                i === 2 ? "text-primary" : "text-foreground/80"
-              }`}
-            >
-              {node.label}
-            </p>
-            <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
-              {node.detail}
-            </p>
-            <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 print:hidden">
-              {node.cases.map((slug) => {
-                const p = projects.find((pr) => pr.slug === slug);
-                if (!p) return null;
-                return (
-                  <button
-                    key={slug}
-                    onClick={() => open(slug)}
-                    aria-label={`Open ${p.name} case study`}
-                    className="group/case inline-flex items-center gap-1 font-mono text-[10px] text-muted-foreground/70 transition-colors hover:text-[var(--pl)] focus-visible:text-[var(--pl)]"
-                    style={{ ["--pl" as string]: p.accent }}
-                  >
-                    <span aria-hidden className="transition-transform group-hover/case:translate-x-0.5">
-                      ↳
-                    </span>
-                    {p.name}
-                  </button>
-                );
-              })}
+              {i < flowStages.length - 1 && (
+                <span
+                  className="flow-line h-10"
+                  style={{ ["--fd" as string]: `${i * 0.55}s` }}
+                />
+              )}
             </div>
-          </div>
-        </motion.li>
-      ))}
+
+            <div className={`min-w-0 flex-1 pb-2 transition-opacity duration-200 ${isDimmed ? "opacity-45" : "opacity-100"}`}>
+              <button
+                type="button"
+                onMouseEnter={() => set(node.label)}
+                onFocus={() => set(node.label)}
+                onBlur={() => set(null)}
+                onClick={() => setPinned((p) => (p === node.label ? null : node.label))}
+                aria-pressed={pinned === node.label}
+                className="block rounded text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <p
+                  className={`font-mono text-[11px] tracking-[0.18em] transition-colors ${
+                    shown === node.label ? "text-primary" : "text-foreground/80"
+                  }`}
+                >
+                  {node.label}
+                </p>
+                <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                  {node.detail}
+                </p>
+              </button>
+
+              <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 print:hidden">
+                {node.cases.map((slug) => {
+                  const p = projects.find((pr) => pr.slug === slug);
+                  if (!p) return null;
+                  const emphasized = shown === null || shown === node.label;
+                  return (
+                    <Link
+                      key={slug}
+                      href={`/work/${slug}`}
+                      aria-label={`${p.name} case study — demonstrates the ${node.label} stage`}
+                      className={`group/case inline-flex items-center gap-1 font-mono text-[10px] transition-all duration-200 hover:text-[var(--pl)] focus-visible:text-[var(--pl)] ${
+                        emphasized
+                          ? "text-muted-foreground"
+                          : "text-muted-foreground/40"
+                      }`}
+                      style={{ ["--pl" as string]: p.accent }}
+                    >
+                      <span aria-hidden className="transition-transform group-hover/case:translate-x-0.5">
+                        ↳
+                      </span>
+                      {p.name}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.li>
+        );
+      })}
     </motion.ol>
   );
 }
@@ -200,14 +233,14 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* System-in-motion visual */}
+          {/* Signature system map */}
           <div className="hidden rounded-xl border border-border/70 bg-card/40 p-5 backdrop-blur-[2px] lg:block print:border-foreground/30 print:bg-transparent">
             <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
               system.profile — how i build
             </p>
             <SystemFlow />
             <p className="mt-3 border-t border-border/50 pt-3 font-mono text-[9.5px] leading-relaxed text-muted-foreground/80 print:hidden">
-              each stage links to the case study that proves it
+              hover or focus a stage — the work that proves it stays lit
             </p>
           </div>
         </div>

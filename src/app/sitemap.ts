@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site-url";
+import { projects } from "@/content/projects";
 
 /**
- * sitemap.xml — the portfolio is a single route; case studies are hash
- * deep links (/#case-<slug>) which search engines index as part of that
- * one URL, so the sitemap lists exactly the canonical page. Listing more
- * would be fabricating crawlable URLs — kept honest instead.
+ * sitemap.xml — the homepage plus one canonical route per case study
+ * (/work/<slug>). Case-study hash deep links (/#case-<slug>) remain as a
+ * transition pattern but are not listed; the routes are the canonical URLs.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -15,5 +15,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
+    ...projects.map((p) => ({
+      url: `${SITE_URL}/work/${p.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    })),
   ];
 }

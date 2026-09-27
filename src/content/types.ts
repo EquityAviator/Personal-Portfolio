@@ -60,11 +60,63 @@ export type ProjectStatus =
   | "Research system"
   | "Open Source";
 
+/**
+ * V2 project-type taxonomy. Drives project-type renderer selection and the
+ * card meta line. Adding a 5th project should require a new content object —
+ * at most a new renderer configuration, never new project-specific logic
+ * in the shell.
+ */
+export type ProjectType =
+  | "research"
+  | "ai-system"
+  | "product"
+  | "learning"
+  | "full-stack";
+
+/** Human-readable labels for ProjectType (single source, keeps UI honest). */
+export const PROJECT_TYPE_LABELS: Record<ProjectType, string> = {
+  research: "ML Research",
+  "ai-system": "AI System",
+  product: "Product",
+  learning: "Learning Technology",
+  "full-stack": "Full-Stack",
+};
+
+/**
+ * Media asset descriptor (V2 media architecture — screenshots deferred).
+ * `src` is empty/absent until a real capture exists; the MediaSlot component
+ * renders a neutral placeholder when no asset is supplied, so adding real
+ * screenshots later changes the content file — never the layout system.
+ */
+export interface MediaAsset {
+  src: string;
+  alt: string;
+  caption?: string;
+  type: "image" | "video" | "diagram";
+  /** CSS aspect-ratio value, e.g. "16/9" or "4/3" */
+  aspectRatio?: string;
+  credit?: string;
+}
+
+/** Structured media slots per project. All optional by design. */
+export interface ProjectMedia {
+  hero?: MediaAsset;
+  gallery?: MediaAsset[];
+  video?: MediaAsset;
+  poster?: MediaAsset;
+}
+
 export interface Project {
   slug: ProjectSlug;
   /** Display order on the homepage */
   index: string;
   name: string;
+  /** Compact name for prev/next navigation and tight UI contexts */
+  shortTitle: string;
+  /** V2 taxonomy — drives renderer selection and card meta */
+  type: ProjectType;
+  /** One-line outcome statement (V2 card hierarchy: title → outcome) */
+  outcome: string;
   /** One-sentence problem / outcome statement for cards */
   tagline: string;
   categories: string[];
@@ -98,4 +150,14 @@ export interface Project {
   findings: Finding[];
   /** Case-study: honest limitations */
   limitations: string[];
+  /**
+   * V2 media architecture: hero/gallery/video/poster slots. Omitted until
+   * real screenshots exist — components must treat absence as normal and
+   * render media-ready placeholders with zero layout rework later.
+   */
+  media?: ProjectMedia;
+  /** Typed related-project slugs (rendered as prev/next-style links) */
+  relatedProjects: ProjectSlug[];
+  /** Keywords for SEO metadata and social sharing */
+  keywords: string[];
 }

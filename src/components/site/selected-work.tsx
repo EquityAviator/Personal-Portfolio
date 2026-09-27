@@ -2,10 +2,14 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, ExternalLink, Github, Globe } from "lucide-react";
+import { ArrowRight, ExternalLink, Github, Globe } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Section } from "./section";
 import { Reveal } from "@/components/motion/reveal";
-import { useCaseStudy, estimateReadMinutes } from "@/components/case-study/case-study-overlay";
+import { estimateReadMinutes } from "@/components/case-study/case-study-overlay";
+import { MediaSlot } from "@/components/case-study/media-slot";
+import { PROJECT_TYPE_LABELS } from "@/content/types";
 import { projects } from "@/content/projects";
 import type { Project } from "@/content/types";
 import { cn } from "@/lib/utils";
@@ -139,10 +143,9 @@ const LINK_ICONS = { github: Github, demo: Globe, external: ExternalLink } as co
 /* ------------------------------------------------------------------ */
 
 function ProjectCard({ project }: { project: Project }) {
-  const { open, viewed } = useCaseStudy();
   const reduce = useReducedMotion();
   const Visual = VISUALS[project.slug];
-  const hasBeenViewed = viewed.includes(project.slug);
+  const router = useRouter();
 
   // Cursor spotlight: write position directly to CSS vars (no re-render).
   const onSpotlightMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -152,13 +155,16 @@ function ProjectCard({ project }: { project: Project }) {
     el.style.setProperty("--my", `${e.clientY - r.top}px`);
   };
 
+  // V2: cards navigate to the canonical route /work/<slug>.
+  const openRoute = () => router.push(`/work/${project.slug}`);
+
   return (
     <motion.article
       initial={reduce ? false : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-48px" }}
       transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
-      onClick={() => open(project.slug)}
+      onClick={openRoute}
       onMouseMove={onSpotlightMove}
       className="work-card group relative flex isolate cursor-pointer flex-col overflow-hidden rounded-2xl border border-border/70 bg-card hover:-translate-y-0.5"
       style={{ ["--pa" as string]: project.accent }}
@@ -171,12 +177,14 @@ function ProjectCard({ project }: { project: Project }) {
       />
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        {/* meta row */}
+        {/* meta row — index · type · timeline | status */}
         <div className="flex items-center justify-between gap-3">
-          <p className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="flex min-w-0 items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
             <span className="pa-text">{project.index}</span>
             <span aria-hidden>·</span>
-            {project.categories.join(" · ")}
+            <span className="truncate">{PROJECT_TYPE_LABELS[project.type]}</span>
+            <span aria-hidden>·</span>
+            <span className="shrink-0">{project.timeline}</span>
           </p>
           <span
             className="pa-text inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px]"
@@ -194,12 +202,24 @@ function ProjectCard({ project }: { project: Project }) {
           </span>
         </div>
 
-        <h3 className="mt-3.5 text-lg font-semibold tracking-tight">{project.name}</h3>
-        <p className="mt-1.5 text-pretty text-[13.5px] leading-relaxed text-muted-foreground">
+        <h3 className="mt-3.5 text-xl font-semibold tracking-tight sm:text-[1.35rem]">
+          <Link
+            href={`/work/${project.slug}`}
+            onClick={(e) => e.stopPropagation()}
+            className="decoration-border underline-offset-4 transition-colors hover:underline"
+          >
+            {project.name}
+          </Link>
+        </h3>
+        {/* V2 card hierarchy: large title → one-line outcome → context */}
+        <p className="mt-1.5 text-pretty text-[13.5px] font-medium leading-relaxed text-foreground/90">
+          {project.outcome}
+        </p>
+        <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted-foreground">
           {project.tagline}
         </p>
 
-        {/* visual */}
+        {/* media slot — per-project diagram motif until a real screenshot lands */}
         <div
           className="mt-5 rounded-xl border p-3"
           style={{
@@ -207,7 +227,11 @@ function ProjectCard({ project }: { project: Project }) {
             background: `color-mix(in oklch, ${project.accent} 4%, transparent)`,
           }}
         >
-          <Visual accent={project.accent} />
+          {project.media?.hero ? (
+            <MediaSlot asset={project.media.hero} label={project.shortTitle} priority />
+          ) : (
+            <Visual accent={project.accent} />
+          )}
         </div>
 
         {/* story strip */}
@@ -253,33 +277,20 @@ function ProjectCard({ project }: { project: Project }) {
           ))}
         </ul>
 
-        {/* actions */}
+        {/* actions — primary: canonical route; secondary: repo/demo links */}
         <div
           className="mt-5 flex items-center justify-between gap-3 border-t border-border/50 pt-4 print:hidden"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              open(project.slug);
-            }}
+          <Link
+            href={`/work/${project.slug}`}
             className="inline-flex items-center gap-1.5 text-[13px] font-medium text-foreground transition-colors"
           >
-            {hasBeenViewed && (
-              <Check
-                className="size-3.5 text-emerald-600 dark:text-emerald-400"
-                aria-hidden
-              />
-            )}
-            <span className="sr-only">
-              {hasBeenViewed ? "Revisit" : "Open"} {project.name} case study
-              {hasBeenViewed ? " (opened earlier this session)" : ""}
-            </span>
             <span
               className="pa-text border-b border-transparent transition-colors group-hover:border-current"
               aria-hidden
             >
-              {hasBeenViewed ? "Revisit case study" : "Open case study"}
+              Open case study
             </span>
             <span className="font-mono text-[10px] font-normal text-muted-foreground" aria-hidden>
               ~{estimateReadMinutes(project)} min
@@ -288,7 +299,7 @@ function ProjectCard({ project }: { project: Project }) {
               className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5"
               aria-hidden
             />
-          </button>
+          </Link>
           <div className="flex items-center gap-1">
             {project.links.map((l) => {
               const Icon = LINK_ICONS[l.icon ?? "external"];

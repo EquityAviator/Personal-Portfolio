@@ -16,6 +16,10 @@ export const projects: Project[] = [
     slug: "dark-pattern-hunter",
     index: "01",
     name: "Dark Pattern Hunter",
+    shortTitle: "Dark Pattern Hunter",
+    type: "ai-system",
+    outcome:
+      "Grounded evidence for every detection — pattern, page location and model reasoning, recorded for audit and reuse as training data.",
     tagline:
       "A multimodal AI system that helps users automatically identify manipulative interface patterns while browsing — detection, grounding, evidence and education in one pipeline.",
     categories: ["Multimodal AI", "Browser Intelligence", "VLM"],
@@ -124,11 +128,25 @@ export const projects: Project[] = [
       "Detection confidence varies with page complexity; findings are recorded as evidence rather than absolute judgments.",
       "No public benchmark scores are documented for this project — evaluation was conducted against the project's own recorded dataset.",
     ],
+    relatedProjects: ["captionai"],
+    keywords: [
+      "dark patterns",
+      "vision-language models",
+      "Chrome extension",
+      "DOM analysis",
+      "dataset creation",
+      "fine-tuning",
+      "consumer protection",
+    ],
   },
   {
     slug: "captionai",
     index: "02",
     name: "CaptionAI",
+    shortTitle: "CaptionAI",
+    type: "research",
+    outcome:
+      "BLEU-1 0.5334 → 0.6559 under one fixed protocol — ten generations, twenty audited techniques, calibrated ~590 ms CPU serving.",
     tagline:
       "An evidence-driven improvement search for local multimodal learning — from a DenseNet + LSTM baseline to a CLIP + GRPO serving champion, one controlled experiment at a time.",
     categories: ["ML Research", "Computer Vision", "Local AI"],
@@ -261,11 +279,26 @@ export const projects: Project[] = [
       "Router ambiguity: 9.97% of real validation photos are still diverted to fallback after the margin fix.",
       "CIDEr-D trade-off: the champion reduces full-split beam-search CIDEr-D relative to CLIP-CE (0.5243 vs 0.6207).",
     ],
+    relatedProjects: ["dark-pattern-hunter"],
+    keywords: [
+      "image captioning",
+      "Flickr8K",
+      "GRPO",
+      "CLIP",
+      "model evaluation",
+      "calibration",
+      "OOD routing",
+      "CPU serving",
+    ],
   },
   {
     slug: "chainproof",
     index: "03",
     name: "ChainProof",
+    shortTitle: "ChainProof",
+    type: "product",
+    outcome:
+      "Approved reviews become canonical SHA-256 records — tamper-evident, publicly verifiable, with integrity kept separate from truth.",
     tagline:
       "An AI-moderated review platform that combines automated trust analysis, human moderation and cryptographic integrity verification — so published reviews are easier to verify and harder to tamper with.",
     categories: ["AI Systems", "Trust & Safety", "Blockchain"],
@@ -418,11 +451,25 @@ export const projects: Project[] = [
       "Core workflows were verified live against the running application; an automated CI test suite remains a documented follow-up.",
       "The BERT/transformers classifier seam exists in the AI provider layer but is not fully implemented.",
     ],
+    relatedProjects: ["anglupol"],
+    keywords: [
+      "trust infrastructure",
+      "SHA-256",
+      "append-only ledger",
+      "AI moderation",
+      "state machine",
+      "EVM adapter",
+      "rewards",
+    ],
   },
   {
     slug: "anglupol",
     index: "04",
     name: "AngluPol",
+    shortTitle: "AngluPol",
+    type: "learning",
+    outcome:
+      "15.6k English–Polish senses scheduled by FSRS-4.5 across four activity types — with a live teacher mirror and private student links.",
     tagline:
       "A modular English–Polish learning platform built around a shared FSRS-4.5 engine — 15.6k senses of structured vocabulary, four activity types, teacher tooling and live classroom monitoring.",
     categories: ["EdTech", "Adaptive Learning", "Full-Stack"],
@@ -577,6 +624,16 @@ export const projects: Project[] = [
       "Learning modes are text-based; pronunciation/audio workflows are outside the present scope.",
       "The rate limiter is in-memory/single-node, with Redis documented as the scaling replacement — designed with a clear path from single-node deployment to horizontally scaled infrastructure.",
       "Core workflows were verified live through browser E2E; an automated CI test plan is documented for future implementation.",
+    ],
+    relatedProjects: ["chainproof"],
+    keywords: [
+      "FSRS-4.5",
+      "spaced repetition",
+      "adaptive learning",
+      "EdTech",
+      "realtime",
+      "Socket.IO",
+      "full-stack",
     ],
   },
 ];
