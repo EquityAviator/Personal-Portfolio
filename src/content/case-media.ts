@@ -9,7 +9,7 @@ import type { ProjectSlug } from "@/content/types";
  * The image binaries ship separately: drop them into the `upload/` folder
  * (loose image files or the original DOCX) and run
  *
- *     bun scripts/ingest-media.mjs
+ *     bun scripts/ingest-media.ts
  *
  * which converts matches to `public/media/<slug>/<id>.webp` and regenerates
  * `case-media.generated.ts`. `CaseMedia` (case-study body) renders an entry

@@ -1,5 +1,52 @@
+import { ScanSearch } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Callout, Finding, StoryStep, TechGroup } from "@/content/types";
+
+/* ------------------------------------------------------------------ */
+/* Owner-documented fact panel                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Consistent container for facts read directly from the owner's product
+ * captures. Content passed here must be visible in those screenshots —
+ * quoted strings appear verbatim in them; nothing is invented.
+ */
+export function OwnerPanel({
+  title,
+  accent,
+  children,
+  className,
+}: {
+  title: string;
+  /** Project accent → tinted border, matching the interactive modules. */
+  accent?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn("mt-5 rounded-xl border bg-card p-5", className)}
+      style={
+        accent
+          ? { borderColor: `color-mix(in oklch, ${accent} 25%, var(--border))` }
+          : undefined
+      }
+    >
+      <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <ScanSearch className="size-3.5 shrink-0" aria-hidden />
+        <span>{title}</span>
+        <span className="rounded bg-secondary/80 px-1.5 py-0.5 text-[9px] tracking-[0.14em]">
+          owner-documented
+        </span>
+      </p>
+      <div className="mt-3">{children}</div>
+      <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+        Facts read from the owner&apos;s own product captures — quoted strings
+        appear verbatim in those screenshots.
+      </p>
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Case study section                                                   */

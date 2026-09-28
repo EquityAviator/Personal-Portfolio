@@ -1,16 +1,15 @@
 import Image from "next/image";
-import { ImageOff } from "lucide-react";
 import type { MediaAsset } from "@/content/types";
 import { cn } from "@/lib/utils";
 
 /**
- * Media-ready slot (V2 media architecture — screenshots deferred).
+ * Media slot (V2 media architecture — screenshots deferred).
  *
  * Renders a real asset when `asset` is supplied (lazy-loaded, captioned,
- * aspect-ratio aware). When no asset exists yet — the current state for all
- * four projects — it renders a neutral technical placeholder so the layout
- * system is already proven: adding real screenshots later changes the
- * content file (`media.hero` …), never the components.
+ * aspect-ratio aware). With no asset it renders a typographic "case mark":
+ * accent-tinted cover art that reads as designed — clearly decorative,
+ * never a fake screenshot. Wiring a real hero later is a content change
+ * (`media.hero`), not a component change.
  */
 export function MediaSlot({
   asset,
@@ -19,9 +18,11 @@ export function MediaSlot({
   className,
   priority = false,
   fit = "cover",
+  accent,
+  index,
 }: {
   asset?: MediaAsset;
-  /** Used for the placeholder label, e.g. the project name */
+  /** Used for the case-mark title, e.g. the project name */
   label: string;
   /** Fallback aspect ratio when the asset doesn't declare one */
   aspect?: string;
@@ -29,6 +30,10 @@ export function MediaSlot({
   priority?: boolean;
   /** Screenshots should use "contain" so no UI gets cropped. */
   fit?: "cover" | "contain";
+  /** Project accent — tints the case-mark gradient. */
+  accent?: string;
+  /** Project index (01–04) shown on the case mark. */
+  index?: string;
 }) {
   if (asset?.src) {
     return (
@@ -54,26 +59,45 @@ export function MediaSlot({
     );
   }
 
-  // Neutral placeholder — a deliberate "media slot", not a fake screenshot.
+  // No asset yet — typographic case mark (decorative, honest).
+  const tone = accent ?? "oklch(0.7 0.12 200)";
   return (
     <figure
       className={cn(
-        "media-slot relative overflow-hidden rounded-xl border border-dashed border-border/80 bg-secondary/30",
+        "relative overflow-hidden rounded-xl border border-border/60",
         className
       )}
       style={{ aspectRatio: asset?.aspectRatio ?? aspect }}
       role="img"
-      aria-label={`${label} — media slot reserved for a project screenshot`}
+      aria-label={`${label} — case mark`}
     >
-      <div className="bg-grid absolute inset-0 opacity-60" aria-hidden />
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
-        <ImageOff className="size-4 text-muted-foreground/70" aria-hidden />
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/80">
-          media slot
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(120% 95% at 12% 8%, color-mix(in oklch, ${tone} 30%, transparent), transparent 62%),
+            radial-gradient(110% 85% at 92% 96%, color-mix(in oklch, ${tone} 16%, transparent), transparent 58%),
+            var(--card)
+          `,
+        }}
+        aria-hidden
+      />
+      <div className="bg-grid absolute inset-0 opacity-40" aria-hidden />
+      <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-7">
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          {index ? `${index} · ` : ""}case study
         </p>
-        <p className="max-w-[26ch] text-balance font-mono text-[10px] leading-relaxed text-muted-foreground/60">
-          {label} — screenshot reserved, layout ready
-        </p>
+        <div>
+          <p
+            className="text-balance text-xl font-semibold tracking-tight sm:text-2xl"
+            style={{ color: `color-mix(in oklch, ${tone} 72%, var(--foreground))` }}
+          >
+            {label}
+          </p>
+          <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80">
+            visual documentation in preparation
+          </p>
+        </div>
       </div>
     </figure>
   );

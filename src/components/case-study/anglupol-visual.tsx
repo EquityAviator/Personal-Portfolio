@@ -3,7 +3,7 @@
 import * as React from "react";
 import { BookOpen, Layers, RotateCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CaseSection } from "./primitives";
+import { CaseSection, OwnerPanel } from "./primitives";
 import { cn } from "@/lib/utils";
 
 /**
@@ -483,5 +483,48 @@ export function SecurityRealtime() {
         </p>
       </div>
     </CaseSection>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Coaching & classroom signals — owner-documented                      */
+/* ------------------------------------------------------------------ */
+
+export function ApCoachingSignals({ accent }: { accent: string }) {
+  return (
+    <OwnerPanel title="Coaching & classroom signals" accent={accent}>
+      <ul className="grid gap-2.5 sm:grid-cols-2">
+        {[
+          [
+            "Configurable coaching thresholds",
+            "Teacher Settings tunes the dashboard's signals: struggling accuracy floor (50%), minimum answers before struggling applies (5), and the overdue backlog window (7 days).",
+          ],
+          [
+            "Needs attention — with reasons",
+            "The dashboard names why each student is flagged: accuracy dip (−37% shown), a falling streak, or a long absence (\u201c6 days since last seen\u201d) — each row carries a suggested nudge.",
+          ],
+          [
+            "Leaderboard & activity mix",
+            "A class leaderboard ranks the last 7 days by points with answered / learned counts; an activity-mix strip shows the share of flashcards, memory, quiz and fill-in-the-blank answers.",
+          ],
+          [
+            "Student-side motivation",
+            "Eight achievement badges (First Steps → Helpful Insider), day streaks, a due-for-review queue (\u201c5 cards — start review session\u201d) and results that extend the streak; teachers can extend assignment due dates from the Assignments table.",
+          ],
+        ].map(([t, d]) => (
+          <li key={t} className="rounded-lg border border-border/60 bg-secondary/30 p-3.5">
+            <p className="flex items-center gap-2 text-[12.5px] font-medium">
+              <span
+                className="inline-block size-1.5 rounded-full"
+                style={{ background: accent }}
+                aria-hidden
+              />
+              {t}
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{d}</p>
+          </li>
+        ))}
+      </ul>
+    </OwnerPanel>
   );
 }

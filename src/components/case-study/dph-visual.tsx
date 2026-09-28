@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Crosshair, Eye, GraduationCap, RotateCcw } from "lucide-react";
-import { CaseSection } from "./primitives";
+import { CaseSection, OwnerPanel } from "./primitives";
 import { cn } from "@/lib/utils";
 
 /**
@@ -515,5 +515,48 @@ export function DataEngine({ accent }: { accent: string }) {
         </p>
       </div>
     </CaseSection>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Product surface — owner-documented                                   */
+/* ------------------------------------------------------------------ */
+
+export function DphProductSurface({ accent }: { accent: string }) {
+  return (
+    <OwnerPanel title="Product surface" accent={accent}>
+      <ul className="grid gap-2.5 sm:grid-cols-2">
+        {[
+          [
+            "Bring-your-own inference",
+            "Settings switches between three AI providers — OpenAI (cloud), OpenRouter free models (e.g. google/gemma-4-31b-it:free) and local AI via LM Studio (default host http://localhost:1234, model qwen3.5-4b shown active). Keys stay with the user.",
+          ],
+          [
+            "Role-gated accounts",
+            "Supabase auth — email/password plus Google and Facebook OAuth — with role checks: \u201cLimited account: AI settings are available only for admin and user roles.\u201d",
+          ],
+          [
+            "Live Guard",
+            "One-tap real-time scan — \u201cfull-page scan with scroll & interaction\u201d — with the active local model badged in the panel while it works.",
+          ],
+          [
+            "Batch tooling",
+            "Dataset Collection exposes Analyze Current Page, Batch Process (Manual URLs) and Batch Process (Auto Crawl) next to the export formats.",
+          ],
+        ].map(([t, d]) => (
+          <li key={t} className="rounded-lg border border-border/60 bg-secondary/30 p-3.5">
+            <p className="flex items-center gap-2 text-[12.5px] font-medium">
+              <span
+                className="inline-block size-1.5 rounded-full"
+                style={{ background: accent }}
+                aria-hidden
+              />
+              {t}
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{d}</p>
+          </li>
+        ))}
+      </ul>
+    </OwnerPanel>
   );
 }

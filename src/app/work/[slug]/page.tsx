@@ -173,9 +173,15 @@ export default async function WorkPage({
             {/* ---------- Sticky section rail (scroll-spy) ---------- */}
             <CaseSectionBar sections={getCaseSections(project.slug)} accent={project.accent} />
 
-            {/* ---------- Media slot (screenshots deferred — layout ready) ---------- */}
+            {/* ---------- Hero media (real asset when wired; case mark otherwise) ---------- */}
             <div className="mx-auto w-full max-w-5xl px-4 pt-8 sm:px-6">
-              <MediaSlot asset={project.media?.hero} label={project.shortTitle} priority />
+              <MediaSlot
+                asset={project.media?.hero}
+                label={project.shortTitle}
+                priority
+                accent={project.accent}
+                index={project.index}
+              />
             </div>
 
             {/* ---------- Case body (shared with the overlay) ---------- */}

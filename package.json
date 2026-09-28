@@ -7,7 +7,9 @@
     "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
-    "db:push": "echo '[portfolio] content-driven — no database; boot no-op (platform entrypoint expects this script)'"
+    "db:push": "echo '[portfolio] content-driven — no database; boot no-op (platform entrypoint expects this script)'",
+    "media:ingest": "bun scripts/ingest-media.ts",
+    "media:status": "curl -s http://localhost:3000/api/media/ingest"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",

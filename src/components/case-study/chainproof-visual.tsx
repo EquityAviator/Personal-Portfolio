@@ -3,7 +3,7 @@
 import * as React from "react";
 import { AlertTriangle, Check, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CaseSection } from "./primitives";
+import { CaseSection, OwnerPanel } from "./primitives";
 import { cn } from "@/lib/utils";
 
 /**
@@ -281,5 +281,53 @@ export function VerifySim({ accent }: { accent: string }) {
         </div>
       </div>
     </CaseSection>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Platform surface — owner-documented                                  */
+/* ------------------------------------------------------------------ */
+
+export function CpPlatformSurface({ accent }: { accent: string }) {
+  return (
+    <OwnerPanel title="Platform surface" accent={accent}>
+      <ul className="grid gap-2.5 sm:grid-cols-2">
+        {[
+          [
+            "Admin console",
+            "Moderation queue with per-review AI evidence (sentiment, fake-review probability, toxicity bars) and per-task inference records; users & businesses tables; AI settings with an LM Studio connection test; rewards & tokens; system health; audit logs with actor / action / entity / IP.",
+          ],
+          [
+            "Business side",
+            "Dashboard (avg rating 4.36 across 11 published reviews, 100% hash-verified, reply rate 27%), sentiment and weekly-engagement analytics, an embeddable verified-badge snippet, product catalog and replies with on-chain badges.",
+          ],
+          [
+            "Customer side",
+            "Reviewer journey with achievement badges, wallet (RTC balance + CSV export), an RTC-priced rewards marketplace, and an AI-assisted write flow (\u201cSuggest improvements\u201d, \u201cSentinel wording\u201d).",
+          ],
+          [
+            "Public & demo",
+            "A no-account verification page (paste a transaction hash), and the landing page exposes role-scoped demo accounts (admin / business / customer) so anyone can try the workflow.",
+          ],
+        ].map(([t, d]) => (
+          <li key={t} className="rounded-lg border border-border/60 bg-secondary/30 p-3.5">
+            <p className="flex items-center gap-2 text-[12.5px] font-medium">
+              <span
+                className="inline-block size-1.5 rounded-full"
+                style={{ background: accent }}
+                aria-hidden
+              />
+              {t}
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{d}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 rounded-lg bg-secondary/40 px-3 py-2 text-[11.5px] leading-relaxed text-muted-foreground">
+        RTC economy values visible in the owner&apos;s capture: base reward 1 per
+        confirmed review, 1.5× quality bonus, 100 RTC daily cap, and a
+        configurable minimum account age against farming.
+      </p>
+    </OwnerPanel>
   );
 }

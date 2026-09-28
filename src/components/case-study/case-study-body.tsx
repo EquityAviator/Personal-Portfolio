@@ -12,23 +12,26 @@ import {
   SplitList,
   StackGrid,
 } from "./primitives";
-import { DphPipeline, DataEngine, PatternTaxonomy } from "./dph-visual";
+import { DphPipeline, DataEngine, PatternTaxonomy, DphProductSurface } from "./dph-visual";
 import {
   ChampionTable,
   ExperimentLadder,
   FailureLedger,
   ServingEngineering,
+  CapProductSurface,
 } from "./captionai-visual";
 import {
   LifecycleStates,
   TrustStack,
   VerifySim,
+  CpPlatformSurface,
 } from "./chainproof-visual";
 import {
   FsrsSimulator,
   LearningLoop,
   SecurityRealtime,
   VocabularyFoundation,
+  ApCoachingSignals,
 } from "./anglupol-visual";
 import type { Project, ProjectSlug } from "@/content/types";
 import { CaseMedia } from "./case-media";
@@ -202,6 +205,7 @@ export function CaseStudyBody({
           <FailureLedger />
           <div className="border-t border-border/50" />
           <ServingEngineering />
+          <CapProductSurface />
           <CaseMedia project={project} section="06" />
         </>
       )}
@@ -229,6 +233,7 @@ export function CaseStudyBody({
         <>
           <div className="border-t border-border/50" />
           <LearningLoop accent={project.accent} />
+          <ApCoachingSignals accent={project.accent} />
           <CaseMedia project={project} section="02" />
           <div className="border-t border-border/50" />
           <VocabularyFoundation />
@@ -250,6 +255,12 @@ export function CaseStudyBody({
             <CalloutCard key={c.title} callout={c} />
           ))}
         </div>
+        {project.slug === "dark-pattern-hunter" && (
+          <DphProductSurface accent={project.accent} />
+        )}
+        {project.slug === "chainproof" && (
+          <CpPlatformSurface accent={project.accent} />
+        )}
         <CaseMedia project={project} section="06" />
       </CaseSection>
 

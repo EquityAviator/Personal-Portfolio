@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { CaseSection } from "./primitives";
+import { CaseSection, OwnerPanel } from "./primitives";
 import { cn } from "@/lib/utils";
 
 /**
@@ -443,5 +443,47 @@ export function ServingEngineering() {
         </p>
       </div>
     </CaseSection>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Product surface — owner-documented                                   */
+/* ------------------------------------------------------------------ */
+
+export function CapProductSurface() {
+  return (
+    <OwnerPanel title="Product surface">
+      <ul className="grid gap-2.5 sm:grid-cols-2">
+        {[
+          [
+            "Research dashboard as an app",
+            "Generate Caption (upload or URL → caption + confidence), a History gallery, a Model Info page documenting the champion and its lineage, and Settings (theme, animations, speech synthesis, auto-copy).",
+          ],
+          [
+            "Serving options are explicit",
+            "The app runs the hosted champion (\u201cAuto — hosted CLIP + GRPO\u201d), can serve a previous generation (Attention v2, with a version selector), call a Hugging Face endpoint, or stay in Notebook mode for research only.",
+          ],
+          [
+            "Progress checkpoints",
+            "The owner's progress table tracks BLEU-1 from v1 (DenseNet + LSTM, 0.5334) to v5 (CLIP + GRPO, 0.6559) on the same validation split — the ladder behind the headline number.",
+          ],
+          [
+            "Live configuration",
+            "The dashboard exposes the training configuration (batch size, learning rate, epochs, optimizer) straight from the backend, next to raw checkpoint metadata.",
+          ],
+        ].map(([t, d]) => (
+          <li key={t} className="rounded-lg border border-border/60 bg-secondary/30 p-3.5">
+            <p className="flex items-center gap-2 text-[12.5px] font-medium">
+              <span
+                className="inline-block size-1.5 rounded-full bg-[oklch(0.7_0.13_178)]"
+                aria-hidden
+              />
+              {t}
+            </p>
+            <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{d}</p>
+          </li>
+        ))}
+      </ul>
+    </OwnerPanel>
   );
 }
