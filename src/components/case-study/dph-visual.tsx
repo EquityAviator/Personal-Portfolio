@@ -462,6 +462,49 @@ export function DataEngine({ accent }: { accent: string }) {
         </div>
       </div>
 
+      {/* Owner-documented dataset collection stats (screenshot-provided) */}
+      <div
+        className="mt-5 rounded-xl border p-5"
+        style={{ borderColor: `color-mix(in oklch, ${accent} 25%, var(--border))` }}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          Dataset collection — owner-documented panel
+        </p>
+        <dl className="mt-3 grid grid-cols-3 gap-3 text-center">
+          {[
+            ["98", "websites scanned"],
+            ["794", "patterns found"],
+            ["98.9%", "prevalence rate"],
+          ].map(([v, l]) => (
+            <div key={l} className="rounded-lg bg-secondary/50 px-2 py-3">
+              <dd className="font-mono text-lg font-semibold tracking-tight" style={{ color: accent }}>
+                {v}
+              </dd>
+              <dt className="mt-0.5 text-[11px] leading-tight text-muted-foreground">{l}</dt>
+            </div>
+          ))}
+        </dl>
+        <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Most frequent recorded patterns">
+          {[
+            ["Reference pricing", "495"],
+            ["Scarcity & popularity", "110"],
+            ["Hidden information", "39"],
+            ["FOMO / urgency", "39"],
+          ].map(([name, n]) => (
+            <li
+              key={name}
+              className="rounded-md border border-border/60 bg-background px-2 py-1 font-mono text-[10.5px] text-muted-foreground"
+            >
+              {name}: <span className="font-semibold text-foreground/90">{n}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-[11.5px] leading-relaxed text-muted-foreground">
+          Recordings export to training JSON, full-backup JSON, JSONL text, UI-TARS, COCO and YOLO
+          formats — the curation stage feeds fine-tuning directly.
+        </p>
+      </div>
+
       {/* Honesty note */}
       <div className="mt-3 rounded-xl border border-border/70 bg-secondary/40 p-4">
         <p className="text-[13px] leading-relaxed text-foreground/85">

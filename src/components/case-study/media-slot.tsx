@@ -18,6 +18,7 @@ export function MediaSlot({
   aspect = "16/9",
   className,
   priority = false,
+  fit = "cover",
 }: {
   asset?: MediaAsset;
   /** Used for the placeholder label, e.g. the project name */
@@ -26,6 +27,8 @@ export function MediaSlot({
   aspect?: string;
   className?: string;
   priority?: boolean;
+  /** Screenshots should use "contain" so no UI gets cropped. */
+  fit?: "cover" | "contain";
 }) {
   if (asset?.src) {
     return (
@@ -36,7 +39,7 @@ export function MediaSlot({
             alt={asset.alt}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 720px"
-            className="object-cover"
+            className={cn(fit === "contain" && "bg-secondary/40 object-contain p-2")}
             priority={priority}
             loading={priority ? undefined : "lazy"}
           />

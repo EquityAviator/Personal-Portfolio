@@ -150,6 +150,43 @@ export function VocabularyFoundation() {
           </p>
         </div>
       </div>
+
+      {/* CEFR distribution — owner-documented teacher-dashboard panel */}
+      <div className="mt-5 rounded-xl border border-border/70 bg-card p-5">
+        <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
+          Merged words by CEFR level — teacher dashboard
+        </p>
+        <dl className="mt-3 space-y-1.5">
+          {[
+            ["A1", 38, 2],
+            ["A2", 505, 12],
+            ["B1", 1040, 22],
+            ["B2", 1549, 34],
+            ["C1", 3513, 76],
+            ["C2", 7103, 100],
+            ["Unassigned", 2250, 49],
+          ].map(([level, count, pct]) => (
+            <div key={level as string} className="flex items-center gap-3">
+              <dt className="w-20 shrink-0 font-mono text-[11px] text-muted-foreground">{level}</dt>
+              <dd className="flex flex-1 items-center gap-2.5">
+                <span className="h-2 overflow-hidden rounded-full bg-secondary" style={{ flex: 1 }}>
+                  <span
+                    className="block h-full rounded-full bg-[oklch(0.62_0.13_178)]"
+                    style={{ width: `${pct}%` }}
+                  />
+                </span>
+                <span className="w-12 shrink-0 text-right font-mono text-[11px] tabular-nums text-foreground/85">
+                  {Number(count).toLocaleString("en-US")}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+          Bar length is relative to the C2 peak (7,103) — proportions as shown on the owner&apos;s
+          dashboard capture, not a chart of the full 15.6k sense inventory.
+        </p>
+      </div>
     </CaseSection>
   );
 }

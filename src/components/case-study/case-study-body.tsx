@@ -31,6 +31,7 @@ import {
   VocabularyFoundation,
 } from "./anglupol-visual";
 import type { Project, ProjectSlug } from "@/content/types";
+import { CaseMedia } from "./case-media";
 
 /**
  * V2 extraction: the case-study BODY (overview → interactive modules →
@@ -154,6 +155,7 @@ export function CaseStudyBody({
             </p>
           ))}
         </div>
+        <CaseMedia project={project} section="01" />
       </CaseSection>
 
       {project.slug === "dark-pattern-hunter" && (
@@ -164,9 +166,11 @@ export function CaseStudyBody({
           <PatternTaxonomy accent={project.accent} />
           <div className="border-t border-border/50" />
           <DataEngine accent={project.accent} />
+          <CaseMedia project={project} section="04" />
           <div className="border-t border-border/50" />
           <CaseSection num="05" title="Capabilities">
             <FeaturesGrid features={project.features} accent={project.accent} />
+            <CaseMedia project={project} section="05" />
           </CaseSection>
         </>
       )}
@@ -187,15 +191,18 @@ export function CaseStudyBody({
                 { label: "Model size", value: "8.42M", context: "parameters · 32 MB checkpoint" },
               ]}
             />
+            <CaseMedia project={project} section="02" />
           </CaseSection>
           <div className="border-t border-border/50" />
           <ExperimentLadder accent={project.accent} />
+          <CaseMedia project={project} section="03" />
           <div className="border-t border-border/50" />
           <ChampionTable />
           <div className="border-t border-border/50" />
           <FailureLedger />
           <div className="border-t border-border/50" />
           <ServingEngineering />
+          <CaseMedia project={project} section="06" />
         </>
       )}
 
@@ -204,13 +211,17 @@ export function CaseStudyBody({
           <div className="border-t border-border/50" />
           <CaseSection num="02" title="How it works">
             <FeaturesGrid features={project.features} accent={project.accent} />
+            <CaseMedia project={project} section="02" />
           </CaseSection>
           <div className="border-t border-border/50" />
           <LifecycleStates accent={project.accent} />
+          <CaseMedia project={project} section="03" />
           <div className="border-t border-border/50" />
           <TrustStack accent={project.accent} />
+          <CaseMedia project={project} section="04" />
           <div className="border-t border-border/50" />
           <VerifySim accent={project.accent} />
+          <CaseMedia project={project} section="05" />
         </>
       )}
 
@@ -218,12 +229,16 @@ export function CaseStudyBody({
         <>
           <div className="border-t border-border/50" />
           <LearningLoop accent={project.accent} />
+          <CaseMedia project={project} section="02" />
           <div className="border-t border-border/50" />
           <VocabularyFoundation />
+          <CaseMedia project={project} section="03" />
           <div className="border-t border-border/50" />
           <FsrsSimulator accent={project.accent} />
+          <CaseMedia project={project} section="04" />
           <div className="border-t border-border/50" />
           <SecurityRealtime />
+          <CaseMedia project={project} section="05" />
         </>
       )}
 
@@ -235,6 +250,7 @@ export function CaseStudyBody({
             <CalloutCard key={c.title} callout={c} />
           ))}
         </div>
+        <CaseMedia project={project} section="06" />
       </CaseSection>
 
       <div className="border-t border-border/50" />
@@ -245,6 +261,7 @@ export function CaseStudyBody({
       <div className="border-t border-border/50" />
       <CaseSection num={pad2(trail + 2)} title="Technology stack">
         <StackGrid stack={project.stack} />
+        <CaseMedia project={project} section="08" />
       </CaseSection>
 
       <div className="border-t border-border/50" />
