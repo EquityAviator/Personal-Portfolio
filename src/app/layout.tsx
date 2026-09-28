@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { MediaIngestDialog } from "@/components/site/media-ingest";
 import { profile } from "@/content/site";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -115,6 +116,9 @@ export default function RootLayout({
           />
           {children}
           <Toaster />
+          {/* Owner-only upload door — renders nothing unless the URL carries
+              #media-ingest (deep-link pattern shared with case overlays). */}
+          <MediaIngestDialog />
         </ThemeProvider>
       </body>
     </html>

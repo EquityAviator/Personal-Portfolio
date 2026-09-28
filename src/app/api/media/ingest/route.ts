@@ -79,7 +79,9 @@ function countManifestEntries(): number {
 function readAvailableIds(): string[] {
   try {
     const src = readFileSync(GENERATED, "utf8");
-    return JSON.parse(src.slice(src.indexOf("["))) as string[];
+    // NB: naive slice-from-"[" breaks here — `string[]` (the type annotation)
+    // contains the first bracket. Pull the quoted id literals instead.
+    return (src.match(/"([a-z0-9-]+)"/g) ?? []).map((s) => s.slice(1, -1));
   } catch {
     return [];
   }

@@ -1,5 +1,6 @@
 import { profile } from "@/content/site";
 import { PrintResumeLink } from "@/components/site/resume-print";
+import { MediaIngestLink } from "@/components/site/media-ingest";
 
 const quickLinks = [
   { label: "Work", href: "#work" },
@@ -78,6 +79,9 @@ export function SiteFooter() {
               ))}
               <li>
                 <PrintResumeLink className="text-[13px] text-muted-foreground transition-colors hover:text-foreground" />
+              </li>
+              <li>
+                <MediaIngestLink />
               </li>
             </ul>
           </div>

@@ -21,9 +21,17 @@ export function CaseMedia({ project, section }: { project: Project; section: str
   );
   if (entries.length === 0) return null;
 
+  // Shared gallery for the lightbox: every converted screenshot of this
+  // section, so arrow keys can browse across the whole group.
+  const gallery = entries.map((e) => ({
+    src: `/media/${project.slug}/${e.id}.webp`,
+    alt: e.alt,
+    caption: e.caption,
+  }));
+
   return (
     <div className="mt-5 grid gap-4">
-      {entries.map((e) => (
+      {entries.map((e, i) => (
         <MediaSlot
           key={e.id}
           asset={{
@@ -35,6 +43,8 @@ export function CaseMedia({ project, section }: { project: Project; section: str
           }}
           label={e.alt}
           fit="contain"
+          zoomItems={gallery}
+          zoomIndex={i}
         />
       ))}
     </div>

@@ -1,6 +1,11 @@
+"use client";
+
+import * as React from "react";
 import Image from "next/image";
+import { ZoomIn } from "lucide-react";
 import type { MediaAsset } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { MediaLightbox, type LightboxItem } from "./lightbox";
 
 /**
  * Media slot (V2 media architecture — screenshots deferred).
@@ -20,6 +25,8 @@ export function MediaSlot({
   fit = "cover",
   accent,
   index,
+  zoomItems,
+  zoomIndex = 0,
 }: {
   asset?: MediaAsset;
   /** Used for the case-mark title, e.g. the project name */
@@ -34,26 +41,68 @@ export function MediaSlot({
   accent?: string;
   /** Project index (01–04) shown on the case mark. */
   index?: string;
+  /** When provided (screenshot galleries), the rendered image becomes a
+   *  button that opens the fullscreen lightbox with arrow-key browsing. */
+  zoomItems?: LightboxItem[];
+  /** Position of this asset within zoomItems. */
+  zoomIndex?: number;
 }) {
+  const [zoomOpen, setZoomOpen] = React.useState(false);
+  // Current position within the shared gallery — re-initialised from this
+  // slot's position each time the lightbox opens.
+  const [zoomIdx, setZoomIdx] = React.useState(zoomIndex);
+
   if (asset?.src) {
+    const image = (
+      <Image
+        src={asset.src}
+        alt={asset.alt}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 720px"
+        className={cn(fit === "contain" && "bg-secondary/40 object-contain p-2")}
+        priority={priority}
+        loading={priority ? undefined : "lazy"}
+      />
+    );
     return (
-      <figure className={cn("overflow-hidden rounded-xl border border-border/60 bg-card", className)}>
+      <figure className={cn("group/media overflow-hidden rounded-xl border border-border/60 bg-card", className)}>
         <div className="relative w-full" style={{ aspectRatio: asset.aspectRatio ?? aspect }}>
-          <Image
-            src={asset.src}
-            alt={asset.alt}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 720px"
-            className={cn(fit === "contain" && "bg-secondary/40 object-contain p-2")}
-            priority={priority}
-            loading={priority ? undefined : "lazy"}
-          />
+          {zoomItems ? (
+            <button
+              type="button"
+              onClick={() => {
+                setZoomIdx(zoomIndex);
+                setZoomOpen(true);
+              }}
+              aria-label={`View fullscreen: ${asset.alt}`}
+              className="absolute inset-0 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+            >
+              {image}
+              <span
+                aria-hidden
+                className="absolute bottom-2.5 right-2.5 flex size-7 items-center justify-center rounded-full border border-border/60 bg-background/85 text-muted-foreground opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 group-hover/media:opacity-100 focus-visible:opacity-100"
+              >
+                <ZoomIn className="size-3.5" />
+              </span>
+            </button>
+          ) : (
+            image
+          )}
         </div>
         {asset.caption && (
           <figcaption className="border-t border-border/50 px-3.5 py-2 font-mono text-[10.5px] leading-relaxed text-muted-foreground">
             {asset.caption}
             {asset.credit && <span className="text-muted-foreground/70"> · {asset.credit}</span>}
           </figcaption>
+        )}
+        {zoomItems && (
+          <MediaLightbox
+            open={zoomOpen}
+            onOpenChange={setZoomOpen}
+            items={zoomItems}
+            index={zoomIdx}
+            onIndexChange={setZoomIdx}
+          />
         )}
       </figure>
     );
